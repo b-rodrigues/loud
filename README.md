@@ -110,7 +110,7 @@ starwars %>%
 ```
 
 You could also use the `%>=%` pipe instead of `bind_loudly()`, once I
-get it working properly. For now it does, but I plan on making things
+get it working properly. For now it doesn’t, but I plan on making things
 like this work:
 
 ``` r
