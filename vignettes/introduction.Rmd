@@ -1,0 +1,115 @@
+---
+title: "Introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This package provides two functions, `loudly()` and `bind_loudly()` which can be used to add
+logging to any function. First, using `loudly()` you create a new function:
+
+
+```{r setup}
+library(loud)
+
+loud_sqrt <- loudly(sqrt)
+```
+
+`loud_sqrt()` is a function, which you can apply to any input you would use on `sqrt()`:
+
+```{r}
+
+my_result <- loud_sqrt(1:5)
+
+```
+
+Let’s check the contents of `my_result`:
+
+```{r}
+str(my_result)
+```
+
+As you can see, `my_result` is a list of two elements; `$result`, which contains the result of 
+`sqrt(1:5)` and `$log`, which contains a simple log message.
+
+A problem that now arises, is that chained operations like this one:
+
+```{r}
+1:10 |>
+  sqrt() |>
+  exp() |>
+  mean()
+
+```
+
+are not possible anymore. This is because `loud_sqrt()` returns a list, and `loud_exp()` expects
+a number, or an atomic vector of numbers. In order to use chained operations, 
+`bind_loudly()` must be used:
+
+
+```{r}
+loud_sqrt <- loudly(sqrt)
+loud_exp <- loudly(exp)
+loud_mean <- loudly(mean)
+
+1:10 |>
+  loud_sqrt() |>
+  bind_loudly(loud_exp) |>
+  bind_loudly(loud_mean)
+
+```
+
+If you prefer using pipes instead of `bind_loudly()`, this package also provides a pipe operator:
+
+```{r}
+1:10 |>
+  loud_sqrt() %>=%
+  loud_exp() %>=%
+  loud_mean()
+
+```
+
+However this implies mixing pipes and ideally, configuring a keyboard shortcut to easily input 
+`%>=%`.
+
+If you want to retrieve any element from the final operation, you can do so with `pick()`:
+
+
+```{r}
+1:10 |>
+  loud_sqrt() |>
+  bind_loudly(loud_exp) |>
+  bind_loudly(loud_mean) |>
+  pick("result")
+
+```
+
+```{r}
+
+1:10 |>
+  loud_sqrt() %>=%
+  loud_exp() %>=%
+  loud_mean() |>
+  pick("log")
+
+```
+
+or you could use the `pluck()` function from the `{purrr}` package:
+
+```{r}
+1:10 |>
+  loud_sqrt() |>
+  bind_loudly(loud_exp) |>
+  bind_loudly(loud_mean) |>
+  purrr::pluck("result")
+
+```

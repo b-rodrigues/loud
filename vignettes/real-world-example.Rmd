@@ -1,0 +1,83 @@
+---
+title: "A real world example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{A real world example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This is practically the same code you can find on this blog post of mine:
+https://www.brodrigues.co/blog/2018-11-14-luxairport/
+but with some minor updates to reflect the current state of the `{tidyverse}` packages as well
+as logging using `{loud}`.
+
+```{r setup}
+library(loud)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(readr)
+
+l_r_tsv <- loudly(read_tsv)
+
+airline <- l_r_tsv("http://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/avia_gor_fr.tsv.gz")
+
+# Define required functions
+
+l_select <- loudly(select)
+l_pivot_longer <- loudly(pivot_longer)
+l_filter <- loudly(filter)
+l_mutate <- loudly(mutate)
+l_separate <- loudly(separate)
+l_group_by <- loudly(group_by)
+l_summarise <- loudly(summarise)
+
+```
+
+```{r}
+avia_clean <- airline %>%
+  bind_loudly(l_select, "unit,tra_meas,airp_pr\\time", contains("20")) %>%
+  bind_loudly(l_pivot_longer, -`unit,tra_meas,airp_pr\\time`, names_to = "date", values_to = "passengers") %>%
+  bind_loudly(l_separate,
+              col = `unit,tra_meas,airp_pr\\time`,
+              into = c("unit", "tra_meas", "air_pr\\time"),
+              sep = ",") 
+
+```
+
+Let’s focus on monthly data:
+
+```{r}
+avia_monthly <- avia_clean %>%
+  bind_loudly(l_filter,
+              tra_meas == "PAS_BRD_ARR",
+              !is.na(passengers),
+              str_detect(date, "M")) %>%
+  bind_loudly(l_mutate,
+              date = paste0(date, "01"),
+              date = ymd(date)) %>%
+  bind_loudly(l_select,
+              destination = "air_pr\\time", date, passengers)
+
+```
+
+Now that the data is clean, we can take a look at the log and see what was done:
+
+```{r}
+
+avia_monthly %>%
+  pick("log")
+
+```
+
+This is especially useful if the object `avia_monthly` gets saved using `saveRDS()`. People that
+then read this object, can read the log to know what happened and reproduce the steps if necessary.

@@ -1,0 +1,17 @@
+Package: loud
+Title: Add logging to functions
+Version: 0.0.0.9000
+Authors@R: 
+    person("Bruno", "Rodrigues", , "bruno@brodrigues.co", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: The functions provided by this package allow you to decorate your functions to provide logging.
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Depends:
+    rlang
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
