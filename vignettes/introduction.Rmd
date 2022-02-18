@@ -68,9 +68,12 @@ loud_mean <- loudly(mean)
 
 ```
 
-If you prefer using pipes instead of `bind_loudly()`, this package also provides a pipe operator:
+If you prefer using pipes instead of `bind_loudly()`, this package also provides a pipe operator, 
+but be careful, this infix operator has not been tested properly and I don’t trust that it works,
+and neither should you:
 
 ```{r}
+
 1:10 |>
   loud_sqrt() %>=%
   loud_exp() %>=%
@@ -110,6 +113,6 @@ or you could use the `pluck()` function from the `{purrr}` package:
   loud_sqrt() |>
   bind_loudly(loud_exp) |>
   bind_loudly(loud_mean) |>
-  purrr::pluck("result")
+  purrr::pluck("log")
 
 ```

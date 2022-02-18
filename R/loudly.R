@@ -56,16 +56,22 @@ bind_loudly <- function(.l, .f, ...){
 #' @param .l A value returned by loudly
 #' @param .f A loud function to apply to the returning value of .l
 #' @return A loud value.
+#' @importFrom stringr str_extract
 #' @examples
 #' loud_sqrt <- loudly(sqrt)
 #' loud_exp <- loudly(exp)
 #' 3 |> loud_sqrt() %>=% loud_exp()
 #' @export
-`%>=%` <- function(.l, .f) {
+`%>=%` <- function(.l, .f, ...) {
 
-    func <- deparse(substitute(.f)) 
-    cmd <- paste0(".l$result |> ", func) 
-    eval(parse(text = cmd)) 
+  #func <- gsub("\\(|\\)", "", deparse(substitute(.f)))
+  func <- gsub("\\(.*$", "", deparse(substitute(.f)))
+  args <- stringr::str_extract(deparse(substitute(.f)), "\\([^()]+\\)")
+  args <- gsub("\\(|\\)", "", args)
+  args <- ifelse(is.na(args), "", paste0(args, ", "))
+  func <- gsub("\\(.*$", "", deparse(substitute(.f)))
+  cmd <- paste0(".l$result |> ", func, "(", args, ".log = .l$log)")
+  eval(parse(text = cmd)) 
     
 }
 

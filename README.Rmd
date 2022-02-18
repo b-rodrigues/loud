@@ -1,0 +1,102 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# loud
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+Easily add logs to your functions.
+
+## Installation
+
+You can install the development version of loud from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("b-rodrigues/loud")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(loud)
+
+loud_sqrt <- loudly(sqrt)
+
+loud_sqrt(1:5)
+```
+
+You can also use the native R pipe:
+
+```{r}
+
+loud_sqrt <- loudly(sqrt)
+loud_exp <- loudly(exp)
+loud_mean <- loudly(mean)
+
+1:10 |>
+  loud_sqrt() |>
+  bind_loudly(loud_exp) |>
+  bind_loudly(loud_mean)
+
+```
+
+`bind_loudly()` is used to pass the output from one decorated function to the next.
+
+`loudly()` works with any function:
+
+```{r}
+library(dplyr)
+
+loud_group_by <- loudly(group_by)
+loud_select <- loudly(select)
+loud_summarise <- loudly(summarise)
+loud_filter <- loudly(filter)
+
+starwars %>%
+  loud_select(height, mass, species, sex) %>%
+  bind_loudly(loud_group_by, species, sex) %>%
+  bind_loudly(loud_filter, sex != "male") %>%  
+  bind_loudly(loud_summarise,
+              mass = mean(mass, na.rm = TRUE)
+              )
+
+```
+
+You could also use the `%>=%` pipe instead of `bind_loudly()`, once I get it working properly. 
+For now it does, but I plan on making things like this work:
+
+```{r, eval = F}
+starwars %>%
+  loud_select(height, mass, species, sex) %>=%
+  loud_group_by(species, sex) %>=%
+  loud_filter(sex != "male") %>=%  
+  loud_summarise(mass = mean(mass, na.rm = TRUE)) 
+
+```
+
+## Caution
+
+This packages is in early development, has not a single test and basically is held together with
+string and j*zz. Use at your own peril.
+
+## Thanks
+
+I’d like to thank [armcn](https://github.com/armcn), [Kupac](https://github.com/Kupac) for their
+blog posts ([here](https://kupac.gitlab.io/biofunctor/2019/05/25/maybe-monad-in-r/)) and 
+packages ([maybe](https://armcn.github.io/maybe/)) which inspired me to build this package.
