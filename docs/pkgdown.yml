@@ -1,0 +1,9 @@
+pandoc: 2.16.1
+pkgdown: 2.0.2
+pkgdown_sha: ~
+articles:
+  advanced-topics: advanced-topics.html
+  introduction: introduction.html
+  real-world-example: real-world-example.html
+last_built: 2022-02-18T19:30Z
+
