@@ -5,5 +5,8 @@ articles:
   advanced-topics: advanced-topics.html
   introduction: introduction.html
   real-world-example: real-world-example.html
-last_built: 2022-02-18T19:30Z
+last_built: 2022-02-18T19:43Z
+urls:
+  reference: https://b-rodrigues.github.io/loud/reference
+  article: https://b-rodrigues.github.io/loud/articles
 
