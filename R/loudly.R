@@ -7,7 +7,7 @@
 #' loudly(sqrt)(10)
 #' @export
 loudly <- function(.f){
-  
+
   fstring <- deparse(substitute(.f))
 
   function(..., .log = "Log start..."){
@@ -25,11 +25,11 @@ loudly <- function(.f){
                         start,
                         " and ended at ",
                         end))
-    
+
     list_result <- list(
       result = result,
       log = the_log
-    )   
+    )
 
     list_result
   }
@@ -65,19 +65,35 @@ bind_loudly <- function(.l, .f, ...){
 `%>=%` <- function(.l, .f, ...) {
 
   #func <- gsub("\\(|\\)", "", deparse(substitute(.f)))
-  func <- gsub("\\(.*$", "", deparse(substitute(.f)))
-  args <- stringr::str_extract(deparse(substitute(.f)), "\\([^()]+\\)")
-  args <- gsub("\\(|\\)", "", args)
-  args <- ifelse(is.na(args), "", paste0(args, ", "))
-  func <- gsub("\\(.*$", "", deparse(substitute(.f)))
-  cmd <- paste0(".l$result |> ", func, "(", args, ".log = .l$log)")
-  eval(parse(text = cmd)) 
-    
+  #func <- gsub("\\(.*$", "", deparse(substitute(.f)))
+  #args <- stringr::str_extract(deparse(substitute(.f)), "\\([^()]+\\)")
+  #args <- gsub("\\(|\\)", "", args)
+  #args <- ifelse(is.na(args), "", paste0(args, ", "))
+  #func <- gsub("\\(.*$", "", deparse(substitute(.f)))
+
+  parsed <- parse_function(.f, ...)
+  
+  
+  cmd <- paste0(".l$result |> ", parsed$func, "(", parsed$args, ".log = .l$log)")
+  eval(parse(text = cmd))
+
 }
 
+parse_function <- function(.f, ...){
+
+  func <- gsub("\\(.*$", "", deparse(substitute(.f)))
+  args <- stringr::str_extract(deparse(substitute(.f)), "\\(([^\\)]+)\\)")
+  args <- gsub("^\\(", "", args)
+  args <- ifelse(is.na(args), "", paste0(args, ", "))
+ # func <- gsub("\\(.*$", "", deparse(substitute(.f)))
+
+  list("func" = func,
+       "args" = args)
+
+}
 
 #' Retrieve an element from a loud value
-#' @param .l A loud value 
+#' @param .l A loud value
 #' @param .e Element of interest to retrieve, one of "result" or "log"
 #' @return The `result` or `log` element of the loud value .l
 #' @examples
