@@ -24,7 +24,7 @@ Easily add logs to your functions.
 
 You can install the development version of loud from [GitHub](https://github.com/) with:
 
-``` r
+```{r, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("b-rodrigues/loud")
 ```
@@ -78,10 +78,9 @@ starwars %>%
 
 ```
 
-You could also use the `%>=%` pipe instead of `bind_loudly()`, once I get it working properly. 
-For now it does, but I plan on making things like this work:
+You could also use the `%>=%` pipe instead of `bind_loudly()`:
 
-```{r, eval = F}
+```{r}
 starwars %>%
   loud_select(height, mass, species, sex) %>=%
   loud_group_by(species, sex) %>=%
@@ -92,7 +91,7 @@ starwars %>%
 
 ## Caution
 
-This packages is in early development, has not a single test and basically is held together with
+This packages is in early development and basically is held together with
 string and j*zz. Use at your own peril.
 
 ## Thanks

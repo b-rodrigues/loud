@@ -71,20 +71,32 @@ bind_loudly <- function(.l, .f, ...){
   #args <- ifelse(is.na(args), "", paste0(args, ", "))
   #func <- gsub("\\(.*$", "", deparse(substitute(.f)))
 
-  parsed <- parse_function(.f, ...)
-  
-  
-  cmd <- paste0(".l$result |> ", parsed$func, "(", parsed$args, ".log = .l$log)")
+  parsed <- parse_function(deparse(substitute(.f)))
+
+  #cmd <- paste0(".l$result |> ", parsed$func, "(", parsed$args, ".log = .l$log)")
+  cmd <- make_command(parsed)
   eval(parse(text = cmd))
 
 }
 
-parse_function <- function(.f, ...){
+make_command <- function(parsed_function){
 
-  func <- gsub("\\(.*$", "", deparse(substitute(.f)))
-  args <- stringr::str_extract(deparse(substitute(.f)), "\\(([^\\)]+)\\)")
+  paste0(".l$result |> ",
+         parsed_function$func,
+         "(",
+         parsed_function$args,
+         ".log = .l$log)")
+
+}
+
+parse_function <- function(.f_string){
+
+  func <- gsub("\\(.*$", "", .f_string)
+  #args <- stringr::str_extract(deparse(substitute(.f)), "\\(([^\\)]+)\\)")
+  args <- stringr::str_extract(.f_string, "\\(.*")
   args <- gsub("^\\(", "", args)
-  args <- ifelse(is.na(args), "", paste0(args, ", "))
+  args <- gsub("\\)$", "", args)
+  args <- ifelse(args != "", paste0(args, ", "), "")
  # func <- gsub("\\(.*$", "", deparse(substitute(.f)))
 
   list("func" = func,

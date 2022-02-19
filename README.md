@@ -24,7 +24,6 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(loud)
-#> Loading required package: rlang
 
 loud_sqrt <- loudly(sqrt)
 
@@ -34,7 +33,7 @@ loud_sqrt(1:5)
 #> 
 #> $log
 #> [1] "Log start..."                                                             
-#> [2] "sqrt(1:5) started at 2022-02-18 16:03:58 and ended at 2022-02-18 16:03:58"
+#> [2] "sqrt(1:5) started at 2022-02-19 15:15:02 and ended at 2022-02-19 15:15:02"
 ```
 
 You can also use the native R pipe:
@@ -53,9 +52,9 @@ loud_mean <- loudly(mean)
 #> 
 #> $log
 #> [1] "Log start..."                                                                   
-#> [2] "sqrt(1:10) started at 2022-02-18 16:03:58 and ended at 2022-02-18 16:03:58"     
-#> [3] "exp(.l$result) started at 2022-02-18 16:03:58 and ended at 2022-02-18 16:03:58" 
-#> [4] "mean(.l$result) started at 2022-02-18 16:03:58 and ended at 2022-02-18 16:03:58"
+#> [2] "sqrt(1:10) started at 2022-02-19 15:15:02 and ended at 2022-02-19 15:15:02"     
+#> [3] "exp(.l$result) started at 2022-02-19 15:15:02 and ended at 2022-02-19 15:15:02" 
+#> [4] "mean(.l$result) started at 2022-02-19 15:15:02 and ended at 2022-02-19 15:15:02"
 ```
 
 `bind_loudly()` is used to pass the output from one decorated function
@@ -87,31 +86,21 @@ starwars %>%
               mass = mean(mass, na.rm = TRUE)
               )
 #> $result
-#> # A tibble: 9 x 3
-#> # Groups:   species [9]
-#>   species    sex              mass
-#>   <chr>      <chr>           <dbl>
-#> 1 Clawdite   female           55  
-#> 2 Droid      none             69.8
-#> 3 Human      female           56.3
-#> 4 Hutt       hermaphroditic 1358  
-#> 5 Kaminoan   female          NaN  
-#> 6 Mirialan   female           53.1
-#> 7 Tholothian female           50  
-#> 8 Togruta    female           57  
-#> 9 Twi'lek    female           55  
+#> tibble [9, 3] 
+#> grouped by: species [9] 
+#> species chr Clawdite Droid Human Hutt Kaminoan Mirialan
+#> sex     chr female none female hermaphroditic female female
+#> mass    dbl 55 69.75 56.333333 1358 NaN 53.1 
 #> 
 #> $log
 #> [1] "Log start..."                                                                                                 
-#> [2] "select(.,height,mass,species,sex) started at 2022-02-18 16:03:58 and ended at 2022-02-18 16:03:58"            
-#> [3] "group_by(.l$result,species,sex) started at 2022-02-18 16:03:58 and ended at 2022-02-18 16:03:58"              
-#> [4] "filter(.l$result,sex != \"male\") started at 2022-02-18 16:03:58 and ended at 2022-02-18 16:03:58"            
-#> [5] "summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-02-18 16:03:58 and ended at 2022-02-18 16:03:58"
+#> [2] "select(.,height,mass,species,sex) started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"            
+#> [3] "group_by(.l$result,species,sex) started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"              
+#> [4] "filter(.l$result,sex != \"male\") started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"            
+#> [5] "summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"
 ```
 
-You could also use the `%>=%` pipe instead of `bind_loudly()`, once I
-get it working properly. For now it doesn’t, but I plan on making things
-like this work:
+You could also use the `%>=%` pipe instead of `bind_loudly()`:
 
 ``` r
 starwars %>%
@@ -119,12 +108,25 @@ starwars %>%
   loud_group_by(species, sex) %>=%
   loud_filter(sex != "male") %>=%  
   loud_summarise(mass = mean(mass, na.rm = TRUE)) 
+#> $result
+#> tibble [9, 3] 
+#> grouped by: species [9] 
+#> species chr Clawdite Droid Human Hutt Kaminoan Mirialan
+#> sex     chr female none female hermaphroditic female female
+#> mass    dbl 55 69.75 56.333333 1358 NaN 53.1 
+#> 
+#> $log
+#> [1] "Log start..."                                                                                                 
+#> [2] "select(.,height,mass,species,sex) started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"            
+#> [3] "group_by(.l$result,species,sex) started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"              
+#> [4] "filter(.l$result,sex != \"male\") started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"            
+#> [5] "summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"
 ```
 
 ## Caution
 
-This packages is in early development, has not a single test and
-basically is held together with string and j\*zz. Use at your own peril.
+This packages is in early development and basically is held together
+with string and j\*zz. Use at your own peril.
 
 ## Thanks
 

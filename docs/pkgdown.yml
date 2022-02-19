@@ -3,9 +3,8 @@ pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   advanced-topics: advanced-topics.html
-  introduction: introduction.html
   real-world-example: real-world-example.html
-last_built: 2022-02-18T19:43Z
+last_built: 2022-02-19T14:18Z
 urls:
   reference: https://b-rodrigues.github.io/loud/reference
   article: https://b-rodrigues.github.io/loud/articles
