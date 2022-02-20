@@ -16,4 +16,52 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(loud)
+library(testthat)
+```
+
+# Monadic laws
+
+First draft: are we dealing with a monad?
+
+- First law
+
+```{r}
+a <- loud_value(10)
+
+test_that("first monadic law", {
+  expect_equal(flat_loudly(a, sqrt), sqrt(a$result))
+})
+
+
+```
+
+- Second law
+
+```{r}
+test_that("second monadic law", {
+  expect_equal(flat_loudly(a, loud_value), a)
+})
+
+```
+
+- Third law
+
+```{r}
+a <- loud_value(10)
+
+loud_sqrt <- loudly(sqrt)
+loud_exp <- loudly(exp)
+loud_mean <- loudly(mean)
+
+loud_exp_after_sqrt <- loudly(purrr::compose(exp, sqrt))
+
+test_that("third monadic law", {
+  expect_equal(
+    (bind_loudly(a, loud_sqrt)) |>
+      bind_loudly(loud_exp),
+    a |>
+      (\(x) bind_loudly(x, loud_sqrt) |> bind_loudly(loud_exp))()
+  )
+})
+
 ```

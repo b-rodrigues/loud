@@ -33,7 +33,7 @@ loud_sqrt(1:5)
 #> 
 #> $log
 #> [1] "Log start..."                                                             
-#> [2] "sqrt(1:5) started at 2022-02-19 15:15:02 and ended at 2022-02-19 15:15:02"
+#> [2] "sqrt(1:5) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"
 ```
 
 You can also use the native R pipe:
@@ -52,9 +52,9 @@ loud_mean <- loudly(mean)
 #> 
 #> $log
 #> [1] "Log start..."                                                                   
-#> [2] "sqrt(1:10) started at 2022-02-19 15:15:02 and ended at 2022-02-19 15:15:02"     
-#> [3] "exp(.l$result) started at 2022-02-19 15:15:02 and ended at 2022-02-19 15:15:02" 
-#> [4] "mean(.l$result) started at 2022-02-19 15:15:02 and ended at 2022-02-19 15:15:02"
+#> [2] "sqrt(1:10) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"     
+#> [3] "exp(.l$result) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35" 
+#> [4] "mean(.l$result) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"
 ```
 
 `bind_loudly()` is used to pass the output from one decorated function
@@ -81,7 +81,7 @@ loud_filter <- loudly(filter)
 starwars %>%
   loud_select(height, mass, species, sex) %>%
   bind_loudly(loud_group_by, species, sex) %>%
-  bind_loudly(loud_filter, sex != "male") %>%  
+  bind_loudly(loud_filter, sex != "male") %>%
   bind_loudly(loud_summarise,
               mass = mean(mass, na.rm = TRUE)
               )
@@ -94,10 +94,10 @@ starwars %>%
 #> 
 #> $log
 #> [1] "Log start..."                                                                                                 
-#> [2] "select(.,height,mass,species,sex) started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"            
-#> [3] "group_by(.l$result,species,sex) started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"              
-#> [4] "filter(.l$result,sex != \"male\") started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"            
-#> [5] "summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"
+#> [2] "select(.,height,mass,species,sex) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"            
+#> [3] "group_by(.l$result,species,sex) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"              
+#> [4] "filter(.l$result,sex != \"male\") started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"            
+#> [5] "summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"
 ```
 
 You could also use the `%>=%` pipe instead of `bind_loudly()`:
@@ -106,8 +106,8 @@ You could also use the `%>=%` pipe instead of `bind_loudly()`:
 starwars %>%
   loud_select(height, mass, species, sex) %>=%
   loud_group_by(species, sex) %>=%
-  loud_filter(sex != "male") %>=%  
-  loud_summarise(mass = mean(mass, na.rm = TRUE)) 
+  loud_filter(sex != "male") %>=%
+  loud_summarise(mass = mean(mass, na.rm = TRUE))
 #> $result
 #> tibble [9, 3] 
 #> grouped by: species [9] 
@@ -117,10 +117,10 @@ starwars %>%
 #> 
 #> $log
 #> [1] "Log start..."                                                                                                 
-#> [2] "select(.,height,mass,species,sex) started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"            
-#> [3] "group_by(.l$result,species,sex) started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"              
-#> [4] "filter(.l$result,sex != \"male\") started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"            
-#> [5] "summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-02-19 15:15:03 and ended at 2022-02-19 15:15:03"
+#> [2] "select(.,height,mass,species,sex) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"            
+#> [3] "group_by(.l$result,species,sex) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"              
+#> [4] "filter(.l$result,sex != \"male\") started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"            
+#> [5] "summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"
 ```
 
 ## Caution

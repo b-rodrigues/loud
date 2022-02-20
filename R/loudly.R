@@ -52,6 +52,33 @@ bind_loudly <- function(.l, .f, ...){
 
 }
 
+
+#' Evaluate a non-loud function on a loud value
+#' @param .l A loud value (a list of two elements)
+#' @param .f A non-loud function
+#' @param ... Further parameters to pass to .f
+#' @return Returns the result of .f(.l$result)
+#' @examples
+#' loud_value(3) |> flat_loudl(sqrt())
+#' @export
+flat_loudly <- function(.l, .f, ...){
+
+  .f(.l$result, ...)
+
+}
+
+#' Create a loud value
+#' @param .x Any object
+#' @return Returns a loud value with the object as the $result
+#' @examples
+#' loud_value(3)
+#' @export
+loud_value <- function(.x){
+
+  list(result = .x,
+       log = "Created loud value...")
+}
+
 #' Pipe a loud value to a decorated function
 #' @param .l A value returned by loudly
 #' @param .f A loud function to apply to the returning value of .l
@@ -64,16 +91,8 @@ bind_loudly <- function(.l, .f, ...){
 #' @export
 `%>=%` <- function(.l, .f, ...) {
 
-  #func <- gsub("\\(|\\)", "", deparse(substitute(.f)))
-  #func <- gsub("\\(.*$", "", deparse(substitute(.f)))
-  #args <- stringr::str_extract(deparse(substitute(.f)), "\\([^()]+\\)")
-  #args <- gsub("\\(|\\)", "", args)
-  #args <- ifelse(is.na(args), "", paste0(args, ", "))
-  #func <- gsub("\\(.*$", "", deparse(substitute(.f)))
-
   parsed <- parse_function(deparse(substitute(.f)))
 
-  #cmd <- paste0(".l$result |> ", parsed$func, "(", parsed$args, ".log = .l$log)")
   cmd <- make_command(parsed)
   eval(parse(text = cmd))
 
@@ -92,12 +111,10 @@ make_command <- function(parsed_function){
 parse_function <- function(.f_string){
 
   func <- gsub("\\(.*$", "", .f_string)
-  #args <- stringr::str_extract(deparse(substitute(.f)), "\\(([^\\)]+)\\)")
   args <- stringr::str_extract(.f_string, "\\(.*")
   args <- gsub("^\\(", "", args)
   args <- gsub("\\)$", "", args)
   args <- ifelse(args != "", paste0(args, ", "), "")
- # func <- gsub("\\(.*$", "", deparse(substitute(.f)))
 
   list("func" = func,
        "args" = args)

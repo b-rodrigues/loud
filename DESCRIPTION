@@ -1,6 +1,6 @@
 Package: loud
 Title: Add logging to functions
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: 
     person("Bruno", "Rodrigues", , "bruno@brodrigues.co", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))

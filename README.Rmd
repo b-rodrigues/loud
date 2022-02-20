@@ -71,7 +71,7 @@ loud_filter <- loudly(filter)
 starwars %>%
   loud_select(height, mass, species, sex) %>%
   bind_loudly(loud_group_by, species, sex) %>%
-  bind_loudly(loud_filter, sex != "male") %>%  
+  bind_loudly(loud_filter, sex != "male") %>%
   bind_loudly(loud_summarise,
               mass = mean(mass, na.rm = TRUE)
               )
@@ -84,8 +84,8 @@ You could also use the `%>=%` pipe instead of `bind_loudly()`:
 starwars %>%
   loud_select(height, mass, species, sex) %>=%
   loud_group_by(species, sex) %>=%
-  loud_filter(sex != "male") %>=%  
-  loud_summarise(mass = mean(mass, na.rm = TRUE)) 
+  loud_filter(sex != "male") %>=%
+  loud_summarise(mass = mean(mass, na.rm = TRUE))
 
 ```
 

@@ -2,6 +2,8 @@
 
 export("%>=%")
 export(bind_loudly)
+export(flat_loudly)
+export(loud_value)
 export(loudly)
 export(pick)
 importFrom(rlang,enexprs)
