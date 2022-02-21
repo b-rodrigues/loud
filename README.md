@@ -1,4 +1,3 @@
-[![Github All Releases](https://img.shields.io/github/downloads/b-rodrigues/loud/total.svg)]()
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
