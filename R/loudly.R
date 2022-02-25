@@ -8,7 +8,7 @@
 #' @export
 loudly <- function(.f){
 
-  fstring <- deparse(substitute(.f))
+  fstring <- deparse1(substitute(.f))
 
   function(..., .log = "Log start..."){
 
@@ -59,7 +59,7 @@ bind_loudly <- function(.l, .f, ...){
 #' @param ... Further parameters to pass to .f
 #' @return Returns the result of .f(.l$result)
 #' @examples
-#' loud_value(3) |> flat_loudl(sqrt())
+#' loud_value(3) |> flat_loudly(sqrt)
 #' @export
 flat_loudly <- function(.l, .f, ...){
 
@@ -91,7 +91,7 @@ loud_value <- function(.x){
 #' @export
 `%>=%` <- function(.l, .f, ...) {
 
-  parsed <- parse_function(deparse(substitute(.f)))
+  parsed <- parse_function(deparse1(substitute(.f)))
 
   cmd <- make_command(parsed)
   eval(parse(text = cmd))
@@ -116,10 +116,17 @@ parse_function <- function(.f_string){
   args <- gsub("\\)$", "", args)
   args <- ifelse(args != "", paste0(args, ", "), "")
 
+ # func <- .f_string[1]
+ # args <- ifelse(is.na(.f_string[-1]),
+ #                "",
+ #                c(paste0(.f_string[-1], collapse = ", "), ", "))
+
   list("func" = func,
        "args" = args)
 
 }
+
+
 
 #' Retrieve an element from a loud value
 #' @param .l A loud value
