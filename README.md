@@ -15,7 +15,7 @@ You can install the development version of loud from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("b-rodrigues/loud")
+devtools::install_github("b-rodrigues/loud@blog_post_release")
 ```
 
 ## Example
