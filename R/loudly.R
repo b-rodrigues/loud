@@ -106,6 +106,28 @@ bind_loudly <- function(.l, .f, ...){
 
 }
 
+#' Evaluate a decorated safe function made using purrr::safely()
+#' @param .l A loud value (a list of two elements)
+#' @param .f A loud function to apply to the returning value of .l
+#' @param ... Further parameters to pass to .f
+#' @return A list with elements .f(.l$result) and concatenated logs.
+#' @examples
+#' loud_sqrt <- loudly(sqrt)
+#' loud_exp <- loudly(exp)
+#' 3 |> loud_sqrt() |> bind_loudly(loud_exp)
+#' @export
+bind_safely <- function(.l, .f, ...){
+
+  # .l$result that's the result of the loud value
+  # .l$result$result that's the result of safely
+  # .l$result$error that's the error message from safely
+  # .l$log that's the log
+
+  log_safely <- ifelse(is.null(.l$result$result), .l$result$error, "")
+
+  .f(.l$result$result, ..., .log = paste0(log_safely, ": ", .l$log))
+
+}
 
 #' Evaluate a non-loud function on a loud value
 #' @param .l A loud value (a list of two elements)
