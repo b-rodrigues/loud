@@ -97,13 +97,6 @@
 <span class="va">l_r_tsv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/loudly.html">loudly</a></span><span class="op">(</span><span class="va">read_tsv</span><span class="op">)</span>
 
 <span class="va">airline</span> <span class="op">&lt;-</span> <span class="fu">l_r_tsv</span><span class="op">(</span><span class="st">"http://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/avia_gor_fr.tsv.gz"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">8189</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">338</span></span>
-<span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span>
-<span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> "\t"</span>
-<span class="co">#&gt; <span style="color: #BB0000;">chr</span> (338): unit,tra_meas,airp_pr\time, 2021Q1, 2021M04, 2021M03, 2021M02, 20...</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use <span style="color: #262626; background-color: #DADADA;">`spec()`</span> to retrieve the full column specification for this data.</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set <span style="color: #262626; background-color: #DADADA;">`show_col_types = FALSE`</span> to quiet this message.</span>
 
 <span class="co"># Define required functions</span>
 
@@ -139,14 +132,14 @@
 <code class="sourceCode R">
 <span class="va">avia_monthly</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="../reference/pick.html">pick</a></span><span class="op">(</span><span class="st">"log"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "Log start..."                                                                                                                                                                      </span>
-<span class="co">#&gt; [2] "read_tsv(http://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/avia_gor_fr.tsv.gz) started at 2022-02-20 21:19:23 and ended at 2022-02-20 21:19:26"</span>
-<span class="co">#&gt; [3] "select(.l$result,unit,tra_meas,airp_pr\\time,contains(\"20\")) started at 2022-02-20 21:19:26 and ended at 2022-02-20 21:19:26"                                                    </span>
-<span class="co">#&gt; [4] "pivot_longer(.l$result,-`unit,tra_meas,airp_pr\\\\time`,date,passengers) started at 2022-02-20 21:19:26 and ended at 2022-02-20 21:19:26"                                          </span>
-<span class="co">#&gt; [5] "separate(.l$result,`unit,tra_meas,airp_pr\\\\time`,c(\"unit\", \"tra_meas\", \"air_pr\\\\time\"),,) started at 2022-02-20 21:19:26 and ended at 2022-02-20 21:20:33"               </span>
-<span class="co">#&gt; [6] "filter(.l$result,tra_meas == \"PAS_BRD_ARR\",!is.na(passengers),str_detect(date, \"M\")) started at 2022-02-20 21:20:33 and ended at 2022-02-20 21:20:35"                          </span>
-<span class="co">#&gt; [7] "mutate(.l$result,paste0(date, \"01\"),ymd(date)) started at 2022-02-20 21:20:33 and ended at 2022-02-20 21:20:35"                                                                  </span>
-<span class="co">#&gt; [8] "select(.l$result,air_pr\\time,date,passengers) started at 2022-02-20 21:20:33 and ended at 2022-02-20 21:20:35"</span></code></pre></div>
+<span class="co">#&gt; [1] "Log start..."                                                                                                                                                                                                                                                                                                                   </span>
+<span class="co">#&gt; [2] "✔ read_tsv(http://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/avia_gor_fr.tsv.gz) started at 2022-03-10 21:55:34 and ended at 2022-03-10 21:55:35"                                                                                                                                           </span>
+<span class="co">#&gt; [3] "✖ CAUTION - ERROR: select(.l$result,unit,tra_meas,airp_pr\\time,contains(\"20\")) started at 2022-03-10 21:55:35 and failed at 2022-03-10 21:55:35 with following message: `contains()` must be used within a *selecting* function.\n\033[34mℹ\033[39m See &lt;https://tidyselect.r-lib.org/reference/faq-selection-context.html&gt;."</span>
+<span class="co">#&gt; [4] "✖ CAUTION - ERROR: pivot_longer(.l$result,-`unit,tra_meas,airp_pr\\\\time`,date,passengers) started at 2022-03-10 21:55:35 and failed at 2022-03-10 21:55:35 with following message: object 'unit,tra_meas,airp_pr\\\\time' not found"                                                                                          </span>
+<span class="co">#&gt; [5] "✖ CAUTION - ERROR: separate(.l$result,`unit,tra_meas,airp_pr\\\\time`,c(\"unit\", \"tra_meas\", \"air_pr\\\\time\"),,) started at 2022-03-10 21:55:35 and failed at 2022-03-10 21:55:35 with following message: object 'unit,tra_meas,airp_pr\\\\time' not found"                                                               </span>
+<span class="co">#&gt; [6] "✖ CAUTION - ERROR: filter(.l$result,tra_meas == \"PAS_BRD_ARR\",!is.na(passengers),str_detect(date, \"M\")) started at 2022-03-10 21:55:35 and failed at 2022-03-10 21:55:35 with following message: object 'tra_meas' not found"                                                                                               </span>
+<span class="co">#&gt; [7] "✖ CAUTION - ERROR: mutate(.l$result,paste0(date, \"01\"),ymd(date)) started at 2022-03-10 21:55:35 and failed at 2022-03-10 21:55:35 with following message: cannot coerce type 'closure' to vector of type 'character'"                                                                                                        </span>
+<span class="co">#&gt; [8] "✖ CAUTION - ERROR: select(.l$result,air_pr\\time,date,passengers) started at 2022-03-10 21:55:35 and failed at 2022-03-10 21:55:35 with following message: object 'passengers' not found"</span></code></pre></div>
 <p>This is especially useful if the object <code>avia_monthly</code> gets saved using <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS()</a></code>. People that then read this object, can read the log to know what happened and reproduce the steps if necessary.</p>
   </main>
 </div>

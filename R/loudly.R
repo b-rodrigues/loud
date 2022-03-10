@@ -3,6 +3,7 @@
 #' @return A function which returns a list. The first element of the list, $result, is the result of
 #' the original function .f applied to its inputs. The second element, $log is NULL in case everything
 #' goes well. In case of error/warning/message, $result is NA and and $log holds the message.
+#' purely() is used by loudly() to allow the latter to handle errors.
 #' @importFrom rlang enexprs
 #' @examples
 #' purely(log)(10)
@@ -13,7 +14,7 @@ purely <- function(.f){
   function(..., .log = "Log start..."){
 
     res <- tryCatch(
-      do.call(what = .f, args = list(...)),
+      do.call(.f, list(...)),
       condition = function(cnd) cnd
     )
 
@@ -51,6 +52,7 @@ loudly <- function(.f){
 
     start <- Sys.time()
     res_pure <- purely(.f)(...)
+    str(res_pure)
     end <- Sys.time()
 
     if(all(is.na(res_pure$result))){
@@ -58,7 +60,7 @@ loudly <- function(.f){
       result <- NULL
 
       the_log <- c(.log,
-                   paste0("CAUTION: ",
+                   paste0("✖ CAUTION - ERROR: ",
                           the_function_call,
                           " started at ",
                           start,
@@ -71,7 +73,8 @@ loudly <- function(.f){
       result <- res_pure$result
 
       the_log <- c(.log,
-                   paste0(the_function_call,
+                   paste0("✔ ",
+                          the_function_call,
                           " started at ",
                           start,
                           " and ended at ",
@@ -106,28 +109,6 @@ bind_loudly <- function(.l, .f, ...){
 
 }
 
-#' Evaluate a decorated safe function made using purrr::safely()
-#' @param .l A loud value (a list of two elements)
-#' @param .f A loud function to apply to the returning value of .l
-#' @param ... Further parameters to pass to .f
-#' @return A list with elements .f(.l$result) and concatenated logs.
-#' @examples
-#' loud_sqrt <- loudly(sqrt)
-#' loud_exp <- loudly(exp)
-#' 3 |> loud_sqrt() |> bind_loudly(loud_exp)
-#' @export
-bind_safely <- function(.l, .f, ...){
-
-  # .l$result that's the result of the loud value
-  # .l$result$result that's the result of safely
-  # .l$result$error that's the error message from safely
-  # .l$log that's the log
-
-  log_safely <- ifelse(is.null(.l$result$result), .l$result$error, "")
-
-  .f(.l$result$result, ..., .log = paste0(log_safely, ": ", .l$log))
-
-}
 
 #' Evaluate a non-loud function on a loud value
 #' @param .l A loud value (a list of two elements)

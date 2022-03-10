@@ -20,5 +20,5 @@ Returns the result of .f(.l$result)
 Evaluate a non-loud function on a loud value
 }
 \examples{
-loud_value(3) |> flat_loudl(sqrt())
+loud_value(3) |> flat_loudly(sqrt)
 }
