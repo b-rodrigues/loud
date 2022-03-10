@@ -1,3 +1,37 @@
+#' Capture all errors, warnings and messages
+#' @param .f A function to decorate
+#' @return A function which returns a list. The first element of the list, $result, is the result of
+#' the original function .f applied to its inputs. The second element, $log is NULL in case everything
+#' goes well. In case of error/warning/message, $result is NA and and $log holds the message.
+#' @importFrom rlang enexprs
+#' @examples
+#' purely(log)(10)
+#' purely(log)(-10)
+#' @export
+purely <- function(.f){
+
+  function(..., .log = "Log start..."){
+
+    res <- tryCatch(
+      do.call(what = .f, args = list(...)),
+      condition = function(cnd) cnd
+    )
+
+    suppressWarnings(
+      res$result <- if(all(c("message", "call") %in% names(res))){
+                      NA
+                    } else {
+                      res
+                    }
+    )
+
+    list(result = res$result,
+         log = res$message)
+
+  }
+}
+
+
 #' Add a simple logging message to any function
 #' @param .f A function to decorate
 #' @return A function which returns a list. The first element of the list, $result, is the result of
@@ -16,15 +50,36 @@ loudly <- function(.f){
     the_function_call <- paste0(fstring, "("  , args, ")")
 
     start <- Sys.time()
-    result <- .f(...)
+    res_pure <- purely(.f)(...)
     end <- Sys.time()
 
-    the_log <- c(.log,
-                 paste0(the_function_call,
-                        " started at ",
-                        start,
-                        " and ended at ",
-                        end))
+    if(all(is.na(res_pure$result))){
+
+      result <- NULL
+
+      the_log <- c(.log,
+                   paste0("CAUTION: ",
+                          the_function_call,
+                          " started at ",
+                          start,
+                          " and failed at ",
+                          end,
+                          " with following message: ",
+                          res_pure$log))
+    } else {
+
+      result <- res_pure$result
+
+      the_log <- c(.log,
+                   paste0(the_function_call,
+                          " started at ",
+                          start,
+                          " and ended at ",
+                          end))
+
+    }
+
+
 
     list_result <- list(
       result = result,
@@ -34,7 +89,6 @@ loudly <- function(.f){
     list_result
   }
 }
-
 
 #' Evaluate a decorated function
 #' @param .l A loud value (a list of two elements)
