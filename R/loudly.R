@@ -13,8 +13,11 @@ purely <- function(.f){
 
   function(..., .log = "Log start..."){
 
+    #to_run <- exprs(.f(...))
+
     res <- tryCatch(
-      do.call(.f, list(...)),
+      #do.call(.f, eval(substitute(alist(...)))),
+      eval_bare(.f(...)),
       condition = function(cnd) cnd
     )
 
@@ -31,7 +34,6 @@ purely <- function(.f){
 
   }
 }
-
 
 #' Add a simple logging message to any function
 #' @param .f A function to decorate
@@ -51,8 +53,9 @@ loudly <- function(.f){
     the_function_call <- paste0(fstring, "("  , args, ")")
 
     start <- Sys.time()
-    res_pure <- purely(.f)(...)
-    str(res_pure)
+    #res_pure <- purely(.f)(...)
+    pure_f <- purely(.f)
+    res_pure <- (pure_f(...))
     end <- Sys.time()
 
     if(all(is.na(res_pure$result))){

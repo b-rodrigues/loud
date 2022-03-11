@@ -25,11 +25,8 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(lubridate)
-library(readr)
 
-l_r_tsv <- loudly(read_tsv)
-
-airline <- l_r_tsv("http://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/avia_gor_fr.tsv.gz")
+data("avia")
 
 # Define required functions
 
@@ -44,11 +41,11 @@ l_summarise <- loudly(summarise)
 ```
 
 ```{r}
-avia_clean <- airline %>%
-  bind_loudly(l_select, "unit,tra_meas,airp_pr\\time", contains("20")) %>%
-  bind_loudly(l_pivot_longer, -`unit,tra_meas,airp_pr\\time`, names_to = "date", values_to = "passengers") %>%
+avia_clean <- avia %>%
+  l_select(1, contains("20")) %>% # select the first column and every column starting with 10
+  bind_loudly(l_pivot_longer, -starts_with("unit"), names_to = "date", values_to = "passengers") %>%
   bind_loudly(l_separate,
-              col = `unit,tra_meas,airp_pr\\time`,
+              col = 1,
               into = c("unit", "tra_meas", "air_pr\\time"),
               sep = ",") 
 
