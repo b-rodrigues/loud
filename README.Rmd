@@ -83,6 +83,7 @@ You could also use the `%>=%` pipe instead of `bind_loudly()`:
 ```{r}
 
 starwars %>%
+  loud_value() %>=%
   loud_select(height, mass, species, sex) %>=%
   loud_group_by(species, sex) %>=%
   loud_filter(sex != "male") %>=%

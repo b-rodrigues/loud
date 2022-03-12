@@ -15,7 +15,7 @@ You can install the development version of loud from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("b-rodrigues/loud@blog_post_release")
+devtools::install_github("b-rodrigues/loud")
 ```
 
 ## Example
@@ -32,8 +32,8 @@ loud_sqrt(1:5)
 #> [1] 1.000000 1.414214 1.732051 2.000000 2.236068
 #> 
 #> $log
-#> [1] "Log start..."                                                             
-#> [2] "sqrt(1:5) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"
+#> [1] "Log start..."                                                               
+#> [2] "✔ sqrt(1:5) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40"
 ```
 
 You can also use the native R pipe:
@@ -51,10 +51,10 @@ loud_mean <- loudly(mean)
 #> [1] 11.55345
 #> 
 #> $log
-#> [1] "Log start..."                                                                   
-#> [2] "sqrt(1:10) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"     
-#> [3] "exp(.l$result) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35" 
-#> [4] "mean(.l$result) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"
+#> [1] "Log start..."                                                                     
+#> [2] "✔ sqrt(1:10) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40"     
+#> [3] "✔ exp(.l$result) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40" 
+#> [4] "✔ mean(.l$result) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40"
 ```
 
 `bind_loudly()` is used to pass the output from one decorated function
@@ -64,14 +64,6 @@ to the next.
 
 ``` r
 library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
 
 loud_group_by <- loudly(group_by)
 loud_select <- loudly(select)
@@ -86,41 +78,34 @@ starwars %>%
               mass = mean(mass, na.rm = TRUE)
               )
 #> $result
-#> tibble [9, 3] 
-#> grouped by: species [9] 
-#> species chr Clawdite Droid Human Hutt Kaminoan Mirialan
-#> sex     chr female none female hermaphroditic female female
-#> mass    dbl 55 69.75 56.333333 1358 NaN 53.1 
+#> NULL
 #> 
 #> $log
-#> [1] "Log start..."                                                                                                 
-#> [2] "select(.,height,mass,species,sex) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"            
-#> [3] "group_by(.l$result,species,sex) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"              
-#> [4] "filter(.l$result,sex != \"male\") started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"            
-#> [5] "summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"
+#> [1] "Log start..."                                                                                                                                                                                                                         
+#> [2] "✔ select(.,height,mass,species,sex) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40"                                                                                                                                  
+#> [3] "✖ CAUTION - ERROR: group_by(.l$result,species,sex) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: "                                                                                         
+#> [4] "✖ CAUTION - ERROR: filter(.l$result,sex != \"male\") started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: no applicable method for 'filter' applied to an object of class \"NULL\""               
+#> [5] "✖ CAUTION - ERROR: summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: no applicable method for 'summarise' applied to an object of class \"NULL\""
 ```
 
 You could also use the `%>=%` pipe instead of `bind_loudly()`:
 
 ``` r
 starwars %>%
+  loud_value() %>=%
   loud_select(height, mass, species, sex) %>=%
   loud_group_by(species, sex) %>=%
   loud_filter(sex != "male") %>=%
   loud_summarise(mass = mean(mass, na.rm = TRUE))
 #> $result
-#> tibble [9, 3] 
-#> grouped by: species [9] 
-#> species chr Clawdite Droid Human Hutt Kaminoan Mirialan
-#> sex     chr female none female hermaphroditic female female
-#> mass    dbl 55 69.75 56.333333 1358 NaN 53.1 
+#> NULL
 #> 
 #> $log
-#> [1] "Log start..."                                                                                                 
-#> [2] "select(.,height,mass,species,sex) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"            
-#> [3] "group_by(.l$result,species,sex) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"              
-#> [4] "filter(.l$result,sex != \"male\") started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"            
-#> [5] "summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35"
+#> [1] "Created loud value..."                                                                                                                                                                                                                
+#> [2] "✔ select(.l$result,height,mass,species,sex) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40"                                                                                                                          
+#> [3] "✖ CAUTION - ERROR: group_by(.l$result,species,sex) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: "                                                                                         
+#> [4] "✖ CAUTION - ERROR: filter(.l$result,sex != \"male\") started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: no applicable method for 'filter' applied to an object of class \"NULL\""               
+#> [5] "✖ CAUTION - ERROR: summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: no applicable method for 'summarise' applied to an object of class \"NULL\""
 ```
 
 ## Caution

@@ -14,7 +14,8 @@ purely <- function(.f){
   function(..., .log = "Log start..."){
 
     res <- rlang::try_fetch(
-                    do.call(.f, eval(substitute(alist(...)))),
+                    #do.call(.f, eval(substitute(alist(...)))),
+                    eval_tidy(.f(...)),
                     condition = function(cnd) cnd
                   )
 

@@ -623,8 +623,8 @@ body {
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.000000 1.414214 1.732051 2.000000 2.236068</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $log</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Log start...&quot;                                                             </span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;sqrt(1:5) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35&quot;</span></span></code></pre></div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Log start...&quot;                                                               </span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;✔ sqrt(1:5) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40&quot;</span></span></code></pre></div>
 <p>You can also use the native R pipe:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>loud_sqrt <span class="ot">&lt;-</span> <span class="fu">loudly</span>(sqrt)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>loud_exp <span class="ot">&lt;-</span> <span class="fu">loudly</span>(exp)</span>
@@ -638,66 +638,51 @@ body {
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 11.55345</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $log</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Log start...&quot;                                                                   </span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;sqrt(1:10) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35&quot;     </span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;exp(.l$result) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35&quot; </span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;mean(.l$result) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35&quot;</span></span></code></pre></div>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Log start...&quot;                                                                     </span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;✔ sqrt(1:10) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40&quot;     </span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;✔ exp(.l$result) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40&quot; </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;✔ mean(.l$result) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40&quot;</span></span></code></pre></div>
 <p><code>bind_loudly()</code> is used to pass the output from one decorated function to the next.</p>
 <p><code>loudly()</code> works with any function:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;dplyr&#39;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:stats&#39;:</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     filter, lag</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:base&#39;:</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>loud_group_by <span class="ot">&lt;-</span> <span class="fu">loudly</span>(group_by)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>loud_select <span class="ot">&lt;-</span> <span class="fu">loudly</span>(select)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>loud_summarise <span class="ot">&lt;-</span> <span class="fu">loudly</span>(summarise)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>loud_filter <span class="ot">&lt;-</span> <span class="fu">loudly</span>(filter)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">loud_select</span>(height, mass, species, sex) <span class="sc">%&gt;%</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_loudly</span>(loud_group_by, species, sex) <span class="sc">%&gt;%</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_loudly</span>(loud_filter, sex <span class="sc">!=</span> <span class="st">&quot;male&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_loudly</span>(loud_summarise,</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">mass =</span> <span class="fu">mean</span>(mass, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>              )</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $result</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tibble [9, 3] </span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; grouped by: species [9] </span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; species chr Clawdite Droid Human Hutt Kaminoan Mirialan</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sex     chr female none female hermaphroditic female female</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mass    dbl 55 69.75 56.333333 1358 NaN 53.1 </span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $log</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Log start...&quot;                                                                                                 </span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;select(.,height,mass,species,sex) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35&quot;            </span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;group_by(.l$result,species,sex) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35&quot;              </span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;filter(.l$result,sex != \&quot;male\&quot;) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35&quot;            </span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35&quot;</span></span></code></pre></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>loud_group_by <span class="ot">&lt;-</span> <span class="fu">loudly</span>(group_by)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>loud_select <span class="ot">&lt;-</span> <span class="fu">loudly</span>(select)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>loud_summarise <span class="ot">&lt;-</span> <span class="fu">loudly</span>(summarise)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>loud_filter <span class="ot">&lt;-</span> <span class="fu">loudly</span>(filter)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">loud_select</span>(height, mass, species, sex) <span class="sc">%&gt;%</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_loudly</span>(loud_group_by, species, sex) <span class="sc">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_loudly</span>(loud_filter, sex <span class="sc">!=</span> <span class="st">&quot;male&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_loudly</span>(loud_summarise,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">mass =</span> <span class="fu">mean</span>(mass, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $result</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $log</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Log start...&quot;                                                                                                                                                                                                                         </span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;✔ select(.,height,mass,species,sex) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40&quot;                                                                                                                                  </span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;✖ </span><span class="al">CAUTION</span><span class="co"> - ERROR: group_by(.l$result,species,sex) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: &quot;                                                                                         </span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;✖ </span><span class="al">CAUTION</span><span class="co"> - ERROR: filter(.l$result,sex != \&quot;male\&quot;) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: no applicable method for &#39;filter&#39; applied to an object of class \&quot;NULL\&quot;&quot;               </span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;✖ </span><span class="al">CAUTION</span><span class="co"> - ERROR: summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: no applicable method for &#39;summarise&#39; applied to an object of class \&quot;NULL\&quot;&quot;</span></span></code></pre></div>
 <p>You could also use the <code>%&gt;=%</code> pipe instead of <code>bind_loudly()</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">loud_select</span>(height, mass, species, sex) <span class="sc">%&gt;=%</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">loud_group_by</span>(species, sex) <span class="sc">%&gt;=%</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">loud_filter</span>(sex <span class="sc">!=</span> <span class="st">&quot;male&quot;</span>) <span class="sc">%&gt;=%</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">loud_summarise</span>(<span class="at">mass =</span> <span class="fu">mean</span>(mass, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $result</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tibble [9, 3] </span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; grouped by: species [9] </span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; species chr Clawdite Droid Human Hutt Kaminoan Mirialan</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sex     chr female none female hermaphroditic female female</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mass    dbl 55 69.75 56.333333 1358 NaN 53.1 </span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $log</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Log start...&quot;                                                                                                 </span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;select(.,height,mass,species,sex) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35&quot;            </span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;group_by(.l$result,species,sex) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35&quot;              </span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;filter(.l$result,sex != \&quot;male\&quot;) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35&quot;            </span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-02-20 21:18:35 and ended at 2022-02-20 21:18:35&quot;</span></span></code></pre></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">loud_value</span>() <span class="sc">%&gt;=%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">loud_select</span>(height, mass, species, sex) <span class="sc">%&gt;=%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">loud_group_by</span>(species, sex) <span class="sc">%&gt;=%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">loud_filter</span>(sex <span class="sc">!=</span> <span class="st">&quot;male&quot;</span>) <span class="sc">%&gt;=%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">loud_summarise</span>(<span class="at">mass =</span> <span class="fu">mean</span>(mass, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $result</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $log</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Created loud value...&quot;                                                                                                                                                                                                                </span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;✔ select(.l$result,height,mass,species,sex) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40&quot;                                                                                                                          </span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;✖ </span><span class="al">CAUTION</span><span class="co"> - ERROR: group_by(.l$result,species,sex) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: &quot;                                                                                         </span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;✖ </span><span class="al">CAUTION</span><span class="co"> - ERROR: filter(.l$result,sex != \&quot;male\&quot;) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: no applicable method for &#39;filter&#39; applied to an object of class \&quot;NULL\&quot;&quot;               </span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;✖ </span><span class="al">CAUTION</span><span class="co"> - ERROR: summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: no applicable method for &#39;summarise&#39; applied to an object of class \&quot;NULL\&quot;&quot;</span></span></code></pre></div>
 <h2 id="caution">Caution</h2>
 <p>This packages is in early development and basically is held together with string and j*zz. Use at your own peril.</p>
 <h2 id="thanks">Thanks</h2>
