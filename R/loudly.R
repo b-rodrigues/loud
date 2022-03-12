@@ -13,24 +13,30 @@ purely <- function(.f){
 
   function(..., .log = "Log start..."){
 
-    #to_run <- exprs(.f(...))
+    res <- rlang::try_fetch(
+                    do.call(.f, eval(substitute(alist(...)))),
+                    condition = function(cnd) cnd
+                  )
 
-    res <- tryCatch(
-      #do.call(.f, eval(substitute(alist(...)))),
-      eval_bare(.f(...)),
-      condition = function(cnd) cnd
+    final_result <- list(
+      result = NULL,
+      log = NULL
     )
 
-    suppressWarnings(
-      res$result <- if(all(c("message", "call") %in% names(res))){
-                      NA
-                    } else {
-                      res
-                    }
-    )
+    final_result$result <- if(c("condition") %in% class(res)){
+                             NA
+                           } else {
+                             res
+                           }
 
-    list(result = res$result,
-         log = res$message)
+    final_result$log <- if(c("condition") %in% class(res)){
+                             res$message
+                           } else {
+                             NA
+                           }
+
+    final_result
+
 
   }
 }

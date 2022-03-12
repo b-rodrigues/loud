@@ -95,38 +95,4 @@ test_that("make dplyr command", {
                )
 })
 
-loud_sqrt <- loudly(sqrt)
-loud_mean <- loudly(mean)
-loud_exp <- loudly(exp)
 
-
-test_that("test that pipe and bind_loud give same results", {
-
-  result_pipe <- 1:10 |>
-    loud_sqrt() %>=%
-    loud_exp() %>=%
-    loud_mean()
-
-  result_bind <- 1:10 |>
-    loud_sqrt() |>
-    bind_loudly(loud_exp) |>
-    bind_loudly(loud_mean)
-
-  expect_equal(result_pipe, result_bind)
-})
-
-
-test_that("errors get captured and logs composed", {
-
-  result_pipe <- -1:-10 |>
-  loud_mean() %>=%
-    loud_sqrt() %>=%
-    loud_exp()
-
-  expect_length(result_pipe$log, 4)
-
-
-
-
-
-})

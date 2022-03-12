@@ -29,3 +29,56 @@ test_that("compose purely decorated functions", {
   expect_equal(result_pipe$result, mean(exp(sqrt(1:10))))
 
 })
+
+
+test_that("compose purely decorated dplyr functions on data.frame", {
+
+  pure_select <- purely(dplyr::select)
+  pure_filter <- purely(dplyr::filter)
+  pure_summarise <- purely(dplyr::summarise)
+
+  result_pure <- mtcars |>
+    pure_select(am, starts_with("c")) %>=%
+    pure_filter(am == 1) %>=%
+    pure_summarise(mean_cyl = mean(cyl))
+
+  result_impure <- mtcars |>
+    dplyr::select(am, starts_with("c")) |>
+    dplyr::filter(am == 1) |>
+    dplyr::summarise(mean_cyl = mean(cyl))
+
+  expect_equal(result_pure$result, result_impure)
+
+})
+
+
+test_that("compose purely decorated dplyr functions on tibbles", {
+
+  pure_select <- purely(dplyr::select)
+  pure_filter <- purely(dplyr::filter)
+  pure_summarise <- purely(dplyr::summarise)
+
+  result_pure <- mtcars |>
+    tibble::as_tibble() |>
+    pure_select(am, starts_with("c")) %>=%
+    pure_filter(am == 1) %>=%
+    pure_summarise(mean_cyl = mean(cyl))
+
+  result_impure <- mtcars |>
+    tibble::as_tibble() |>
+    dplyr::select(am, starts_with("c")) |>
+    dplyr::filter(am == 1) |>
+    dplyr::summarise(mean_cyl = mean(cyl))
+
+  expect_equal(result_pure$result, result_impure)
+
+})
+
+
+test_that("test group_by", {
+
+  pure_group_by <- purely(dplyr::group_by)
+
+  expect_equal(group_by(mtcars, carb), pure_group_by(mtcars, carb)$result)
+
+})
