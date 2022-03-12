@@ -33,7 +33,7 @@ loud_sqrt(1:5)
 #> 
 #> $log
 #> [1] "Log start..."                                                               
-#> [2] "✔ sqrt(1:5) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40"
+#> [2] "✔ sqrt(1:5) started at 2022-03-12 21:52:36 and ended at 2022-03-12 21:52:36"
 ```
 
 You can also use the native R pipe:
@@ -52,9 +52,9 @@ loud_mean <- loudly(mean)
 #> 
 #> $log
 #> [1] "Log start..."                                                                     
-#> [2] "✔ sqrt(1:10) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40"     
-#> [3] "✔ exp(.l$result) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40" 
-#> [4] "✔ mean(.l$result) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40"
+#> [2] "✔ sqrt(1:10) started at 2022-03-12 21:52:36 and ended at 2022-03-12 21:52:36"     
+#> [3] "✔ exp(.l$result) started at 2022-03-12 21:52:36 and ended at 2022-03-12 21:52:36" 
+#> [4] "✔ mean(.l$result) started at 2022-03-12 21:52:36 and ended at 2022-03-12 21:52:36"
 ```
 
 `bind_loudly()` is used to pass the output from one decorated function
@@ -64,6 +64,14 @@ to the next.
 
 ``` r
 library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 
 loud_group_by <- loudly(group_by)
 loud_select <- loudly(select)
@@ -78,14 +86,18 @@ starwars %>%
               mass = mean(mass, na.rm = TRUE)
               )
 #> $result
-#> NULL
+#> tibble [9, 3] 
+#> grouped by: species [9] 
+#> species chr Clawdite Droid Human Hutt Kaminoan Mirialan
+#> sex     chr female none female hermaphroditic female female
+#> mass    dbl 55 69.75 56.333333 1358 NaN 53.1 
 #> 
 #> $log
-#> [1] "Log start..."                                                                                                                                                                                                                         
-#> [2] "✔ select(.,height,mass,species,sex) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40"                                                                                                                                  
-#> [3] "✖ CAUTION - ERROR: group_by(.l$result,species,sex) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: "                                                                                         
-#> [4] "✖ CAUTION - ERROR: filter(.l$result,sex != \"male\") started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: no applicable method for 'filter' applied to an object of class \"NULL\""               
-#> [5] "✖ CAUTION - ERROR: summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: no applicable method for 'summarise' applied to an object of class \"NULL\""
+#> [1] "Log start..."                                                                                                   
+#> [2] "✔ select(.,height,mass,species,sex) started at 2022-03-12 21:52:36 and ended at 2022-03-12 21:52:36"            
+#> [3] "✔ group_by(.l$result,species,sex) started at 2022-03-12 21:52:36 and ended at 2022-03-12 21:52:36"              
+#> [4] "✔ filter(.l$result,sex != \"male\") started at 2022-03-12 21:52:36 and ended at 2022-03-12 21:52:36"            
+#> [5] "✔ summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-12 21:52:36 and ended at 2022-03-12 21:52:36"
 ```
 
 You could also use the `%>=%` pipe instead of `bind_loudly()`:
@@ -98,20 +110,27 @@ starwars %>%
   loud_filter(sex != "male") %>=%
   loud_summarise(mass = mean(mass, na.rm = TRUE))
 #> $result
-#> NULL
+#> tibble [9, 3] 
+#> grouped by: species [9] 
+#> species chr Clawdite Droid Human Hutt Kaminoan Mirialan
+#> sex     chr female none female hermaphroditic female female
+#> mass    dbl 55 69.75 56.333333 1358 NaN 53.1 
 #> 
 #> $log
-#> [1] "Created loud value..."                                                                                                                                                                                                                
-#> [2] "✔ select(.l$result,height,mass,species,sex) started at 2022-03-12 21:08:40 and ended at 2022-03-12 21:08:40"                                                                                                                          
-#> [3] "✖ CAUTION - ERROR: group_by(.l$result,species,sex) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: "                                                                                         
-#> [4] "✖ CAUTION - ERROR: filter(.l$result,sex != \"male\") started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: no applicable method for 'filter' applied to an object of class \"NULL\""               
-#> [5] "✖ CAUTION - ERROR: summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-12 21:08:40 and failed at 2022-03-12 21:08:40 with following message: no applicable method for 'summarise' applied to an object of class \"NULL\""
+#> [1] "Created loud value..."                                                                                          
+#> [2] "✔ select(.l$result,height,mass,species,sex) started at 2022-03-12 21:52:36 and ended at 2022-03-12 21:52:36"    
+#> [3] "✔ group_by(.l$result,species,sex) started at 2022-03-12 21:52:36 and ended at 2022-03-12 21:52:36"              
+#> [4] "✔ filter(.l$result,sex != \"male\") started at 2022-03-12 21:52:36 and ended at 2022-03-12 21:52:36"            
+#> [5] "✔ summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-12 21:52:36 and ended at 2022-03-12 21:52:36"
 ```
 
 ## Caution
 
 This packages is in early development and basically is held together
-with string and j\*zz. Use at your own peril.
+with string and j\*zz. Use at your own peril, but it has some tests now
+that pass, so it shouldn’t be too bad. That being said, if you used it
+for serious work and it turns out that you house caught on fire, that’s
+on you.
 
 ## Thanks
 

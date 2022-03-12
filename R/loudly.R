@@ -4,7 +4,7 @@
 #' the original function .f applied to its inputs. The second element, $log is NULL in case everything
 #' goes well. In case of error/warning/message, $result is NA and and $log holds the message.
 #' purely() is used by loudly() to allow the latter to handle errors.
-#' @importFrom rlang enexprs
+#' @importFrom rlang try_fetch eval_tidy
 #' @examples
 #' purely(log)(10)
 #' purely(log)(-10)
@@ -14,9 +14,10 @@ purely <- function(.f){
   function(..., .log = "Log start..."){
 
     res <- rlang::try_fetch(
-                    #do.call(.f, eval(substitute(alist(...)))),
-                    eval_tidy(.f(...)),
-                    condition = function(cnd) cnd
+                    rlang::eval_tidy(.f(...)),
+                    error = function(err) err,
+                    warning = function(warn) warn,
+                    message = function(message) message,
                   )
 
     final_result <- list(
@@ -24,13 +25,13 @@ purely <- function(.f){
       log = NULL
     )
 
-    final_result$result <- if(c("condition") %in% class(res)){
+    final_result$result <- if(any(c("error", "warning", "message") %in% class(res))){
                              NA
                            } else {
                              res
                            }
 
-    final_result$log <- if(c("condition") %in% class(res)){
+    final_result$log <- if(any(c("error", "warning", "message") %in% class(res))){
                              res$message
                            } else {
                              NA
@@ -60,7 +61,6 @@ loudly <- function(.f){
     the_function_call <- paste0(fstring, "("  , args, ")")
 
     start <- Sys.time()
-    #res_pure <- purely(.f)(...)
     pure_f <- purely(.f)
     res_pure <- (pure_f(...))
     end <- Sys.time()

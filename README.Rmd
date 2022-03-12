@@ -93,8 +93,9 @@ starwars %>%
 
 ## Caution
 
-This packages is in early development and basically is held together with
-string and j*zz. Use at your own peril.
+This packages is in early development and basically is held together with string and j*zz. Use at
+your own peril, but it has some tests now that pass, so it shouldn't be too bad. That being said,
+if you used it for serious work and it turns out that you house caught on fire, that's on you.
 
 ## Thanks
 
