@@ -26,7 +26,7 @@ You can install the development version of loud from [GitHub](https://github.com
 
 ```{r, eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("b-rodrigues/loud")
+devtools::install_github("b-rodrigues/loud@release_0.1")
 ```
 
 ## Example
