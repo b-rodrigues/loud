@@ -32,7 +32,7 @@ purely <- function(.f){
                            }
 
     final_result$log <- if(any(c("error", "warning", "message") %in% class(res))){
-                             res$message
+                             if(res$message == "") { "undefined error: it is likely that the used function is a tidyverse verb - check that the selected columns exist." } else {res$message}
                            } else {
                              NA
                            }
