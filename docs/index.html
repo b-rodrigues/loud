@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">loud</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,8 +85,8 @@
 <span class="co">#&gt; [1] 1.000000 1.414214 1.732051 2.000000 2.236068</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $log</span>
-<span class="co">#&gt; [1] "Log start..."                                                                      </span>
-<span class="co">#&gt; [2] "&lt;U+2714&gt; sqrt(1:5) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"</span></code></pre></div>
+<span class="co">#&gt; [1] "Log start..."                                                               </span>
+<span class="co">#&gt; [2] "✔ sqrt(1:5) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"</span></code></pre></div>
 <p>You can also use the native R pipe:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">loud_sqrt</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/loudly.html">loudly</a></span><span class="op">(</span><span class="va">sqrt</span><span class="op">)</span>
@@ -101,14 +101,22 @@
 <span class="co">#&gt; [1] 11.55345</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $log</span>
-<span class="co">#&gt; [1] "Log start..."                                                                            </span>
-<span class="co">#&gt; [2] "&lt;U+2714&gt; sqrt(1:10) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"     </span>
-<span class="co">#&gt; [3] "&lt;U+2714&gt; exp(.l$result) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27" </span>
-<span class="co">#&gt; [4] "&lt;U+2714&gt; mean(.l$result) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"</span></code></pre></div>
+<span class="co">#&gt; [1] "Log start..."                                                                     </span>
+<span class="co">#&gt; [2] "✔ sqrt(1:10) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"     </span>
+<span class="co">#&gt; [3] "✔ exp(.l$result) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42" </span>
+<span class="co">#&gt; [4] "✔ mean(.l$result) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"</span></code></pre></div>
 <p><code><a href="reference/bind_loudly.html">bind_loudly()</a></code> is used to pass the output from one decorated function to the next.</p>
 <p><code><a href="reference/loudly.html">loudly()</a></code> works with any function:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'dplyr'</span>
+<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     filter, lag</span>
+<span class="co">#&gt; The following objects are masked from 'package:base':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     intersect, setdiff, setequal, union</span>
 
 <span class="va">loud_group_by</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/loudly.html">loudly</a></span><span class="op">(</span><span class="va">group_by</span><span class="op">)</span>
 <span class="va">loud_select</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/loudly.html">loudly</a></span><span class="op">(</span><span class="va">select</span><span class="op">)</span>
@@ -130,11 +138,11 @@
 <span class="co">#&gt; mass    dbl 55 69.75 56.333333 1358 NaN 53.1 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $log</span>
-<span class="co">#&gt; [1] "Log start..."                                                                                                          </span>
-<span class="co">#&gt; [2] "&lt;U+2714&gt; select(.,height,mass,species,sex) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"            </span>
-<span class="co">#&gt; [3] "&lt;U+2714&gt; group_by(.l$result,species,sex) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"              </span>
-<span class="co">#&gt; [4] "&lt;U+2714&gt; filter(.l$result,sex != \"male\") started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"            </span>
-<span class="co">#&gt; [5] "&lt;U+2714&gt; summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"</span></code></pre></div>
+<span class="co">#&gt; [1] "Log start..."                                                                                                   </span>
+<span class="co">#&gt; [2] "✔ select(.,height,mass,species,sex) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"            </span>
+<span class="co">#&gt; [3] "✔ group_by(.l$result,species,sex) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"              </span>
+<span class="co">#&gt; [4] "✔ filter(.l$result,sex != \"male\") started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"            </span>
+<span class="co">#&gt; [5] "✔ summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"</span></code></pre></div>
 <p>You could also use the <code>%&gt;=%</code> pipe instead of <code><a href="reference/bind_loudly.html">bind_loudly()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">starwars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -151,11 +159,11 @@
 <span class="co">#&gt; mass    dbl 55 69.75 56.333333 1358 NaN 53.1 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $log</span>
-<span class="co">#&gt; [1] "Created loud value..."                                                                                                 </span>
-<span class="co">#&gt; [2] "&lt;U+2714&gt; select(.l$result,height,mass,species,sex) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"    </span>
-<span class="co">#&gt; [3] "&lt;U+2714&gt; group_by(.l$result,species,sex) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"              </span>
-<span class="co">#&gt; [4] "&lt;U+2714&gt; filter(.l$result,sex != \"male\") started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"            </span>
-<span class="co">#&gt; [5] "&lt;U+2714&gt; summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"</span></code></pre></div>
+<span class="co">#&gt; [1] "Created loud value..."                                                                                          </span>
+<span class="co">#&gt; [2] "✔ select(.l$result,height,mass,species,sex) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"    </span>
+<span class="co">#&gt; [3] "✔ group_by(.l$result,species,sex) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"              </span>
+<span class="co">#&gt; [4] "✔ filter(.l$result,sex != \"male\") started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"            </span>
+<span class="co">#&gt; [5] "✔ summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"</span></code></pre></div>
 <p>Errors, warnings, and messages also get caught and composed in the log:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">starwars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -168,11 +176,11 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $log</span>
-<span class="co">#&gt; [1] "Created loud value..."                                                                                                                                                                                                                       </span>
-<span class="co">#&gt; [2] "&lt;U+2714&gt; select(.l$result,height,mass,species,sex) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"                                                                                                                          </span>
-<span class="co">#&gt; [3] "&lt;U+2716&gt; CAUTION - ERROR: group_by(.l$result,species,sx) started at 2022-03-16 11:04:27 and failed at 2022-03-16 11:04:27 with following message: Must group by variables found in `.data`.\nx Column `sx` is not found."                    </span>
-<span class="co">#&gt; [4] "&lt;U+2716&gt; CAUTION - ERROR: filter(.l$result,sex != \"male\") started at 2022-03-16 11:04:27 and failed at 2022-03-16 11:04:27 with following message: no applicable method for 'filter' applied to an object of class \"NULL\""               </span>
-<span class="co">#&gt; [5] "&lt;U+2716&gt; CAUTION - ERROR: summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-16 11:04:27 and failed at 2022-03-16 11:04:27 with following message: no applicable method for 'summarise' applied to an object of class \"NULL\""</span></code></pre></div>
+<span class="co">#&gt; [1] "Created loud value..."                                                                                                                                                                                                                </span>
+<span class="co">#&gt; [2] "✔ select(.l$result,height,mass,species,sex) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"                                                                                                                          </span>
+<span class="co">#&gt; [3] "✖ CAUTION - ERROR: group_by(.l$result,species,sx) started at 2022-03-16 21:11:42 and failed at 2022-03-16 21:11:42 with following message: Must group by variables found in `.data`.\n✖ Column `sx` is not found."                    </span>
+<span class="co">#&gt; [4] "✖ CAUTION - ERROR: filter(.l$result,sex != \"male\") started at 2022-03-16 21:11:42 and failed at 2022-03-16 21:11:42 with following message: no applicable method for 'filter' applied to an object of class \"NULL\""               </span>
+<span class="co">#&gt; [5] "✖ CAUTION - ERROR: summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-16 21:11:42 and failed at 2022-03-16 21:11:42 with following message: no applicable method for 'summarise' applied to an object of class \"NULL\""</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="caution">Caution<a class="anchor" aria-label="anchor" href="#caution"></a>
