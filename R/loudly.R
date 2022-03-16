@@ -4,7 +4,7 @@
 #' the original function .f applied to its inputs. The second element, $log is NULL in case everything
 #' goes well. In case of error/warning/message, $result is NA and and $log holds the message.
 #' purely() is used by loudly() to allow the latter to handle errors.
-#' @importFrom rlang try_fetch eval_tidy
+#' @importFrom rlang try_fetch eval_tidy cnd_message
 #' @examples
 #' purely(log)(10)
 #' purely(log)(-10)
@@ -32,7 +32,7 @@ purely <- function(.f){
                            }
 
     final_result$log <- if(any(c("error", "warning", "message") %in% class(res))){
-                             if(res$message == "") { "undefined error: it is likely that the used function is a tidyverse verb - check that the selected columns exist." } else {res$message}
+                          rlang::cnd_message(res)
                            } else {
                              NA
                            }

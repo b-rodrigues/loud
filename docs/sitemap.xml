@@ -4,9 +4,6 @@
     <loc>https://b-rodrigues.github.io/loud/404.html</loc>
   </url>
   <url>
-    <loc>https://b-rodrigues.github.io/loud/LICENSE.html</loc>
-  </url>
-  <url>
     <loc>https://b-rodrigues.github.io/loud/articles/advanced-topics.html</loc>
   </url>
   <url>
@@ -25,6 +22,9 @@
     <loc>https://b-rodrigues.github.io/loud/index.html</loc>
   </url>
   <url>
+    <loc>https://b-rodrigues.github.io/loud/LICENSE.html</loc>
+  </url>
+  <url>
     <loc>https://b-rodrigues.github.io/loud/reference/avia.html</loc>
   </url>
   <url>
@@ -40,10 +40,10 @@
     <loc>https://b-rodrigues.github.io/loud/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://b-rodrigues.github.io/loud/reference/loud_value.html</loc>
+    <loc>https://b-rodrigues.github.io/loud/reference/loudly.html</loc>
   </url>
   <url>
-    <loc>https://b-rodrigues.github.io/loud/reference/loudly.html</loc>
+    <loc>https://b-rodrigues.github.io/loud/reference/loud_value.html</loc>
   </url>
   <url>
     <loc>https://b-rodrigues.github.io/loud/reference/pick.html</loc>

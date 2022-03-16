@@ -79,6 +79,6 @@ test_that("test group_by", {
 
   pure_group_by <- purely(dplyr::group_by)
 
-  expect_equal(group_by(mtcars, carb), pure_group_by(mtcars, carb)$result)
+  expect_equal(dplyr::group_by(mtcars, carb), pure_group_by(mtcars, carb)$result)
 
 })

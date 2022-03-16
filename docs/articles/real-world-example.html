@@ -129,19 +129,19 @@
 <code class="sourceCode R">
 <span class="va">avia_monthly</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="../reference/pick.html">pick</a></span><span class="op">(</span><span class="st">"log"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "Log start..."                                                                                                                                              </span>
-<span class="co">#&gt; [2] "✔ select(.,1,contains(\"20\")) started at 2022-03-12 21:52:55 and ended at 2022-03-12 21:52:55"                                                            </span>
-<span class="co">#&gt; [3] "✔ pivot_longer(.l$result,-starts_with(\"unit\"),date,passengers) started at 2022-03-12 21:52:55 and ended at 2022-03-12 21:52:55"                          </span>
-<span class="co">#&gt; [4] "✔ separate(.l$result,1,c(\"unit\", \"tra_meas\", \"air_pr\\\\time\"),,) started at 2022-03-12 21:52:55 and ended at 2022-03-12 21:52:57"                   </span>
-<span class="co">#&gt; [5] "✔ filter(.l$result,tra_meas == \"PAS_BRD_ARR\",!is.na(passengers),str_detect(date, \"M\")) started at 2022-03-12 21:52:57 and ended at 2022-03-12 21:52:57"</span>
-<span class="co">#&gt; [6] "✔ mutate(.l$result,paste0(date, \"01\"),ymd(date)) started at 2022-03-12 21:52:57 and ended at 2022-03-12 21:52:57"                                        </span>
-<span class="co">#&gt; [7] "✔ select(.l$result,air_pr\\time,date,passengers) started at 2022-03-12 21:52:57 and ended at 2022-03-12 21:52:57"</span></code></pre></div>
+<span class="co">#&gt; [1] "Log start..."                                                                                                                                                         </span>
+<span class="co">#&gt; [2] "&lt;e2&gt;&lt;9c&gt;&lt;94&gt; select(.,1,contains(\"20\")) started at 2022-03-16 11:10:01 and ended at 2022-03-16 11:10:01"                                                            </span>
+<span class="co">#&gt; [3] "&lt;e2&gt;&lt;9c&gt;&lt;94&gt; pivot_longer(.l$result,-starts_with(\"unit\"),date,passengers) started at 2022-03-16 11:10:01 and ended at 2022-03-16 11:10:01"                          </span>
+<span class="co">#&gt; [4] "&lt;e2&gt;&lt;9c&gt;&lt;94&gt; separate(.l$result,1,c(\"unit\", \"tra_meas\", \"air_pr\\\\time\"),,) started at 2022-03-16 11:10:01 and ended at 2022-03-16 11:10:03"                   </span>
+<span class="co">#&gt; [5] "&lt;e2&gt;&lt;9c&gt;&lt;94&gt; filter(.l$result,tra_meas == \"PAS_BRD_ARR\",!is.na(passengers),str_detect(date, \"M\")) started at 2022-03-16 11:10:03 and ended at 2022-03-16 11:10:03"</span>
+<span class="co">#&gt; [6] "&lt;e2&gt;&lt;9c&gt;&lt;94&gt; mutate(.l$result,paste0(date, \"01\"),ymd(date)) started at 2022-03-16 11:10:03 and ended at 2022-03-16 11:10:03"                                        </span>
+<span class="co">#&gt; [7] "&lt;e2&gt;&lt;9c&gt;&lt;94&gt; select(.l$result,air_pr\\time,date,passengers) started at 2022-03-16 11:10:03 and ended at 2022-03-16 11:10:03"</span></code></pre></div>
 <p>This is especially useful if the object <code>avia_monthly</code> gets saved using <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS()</a></code>. People that then read this object, can read the log to know what happened and reproduce the steps if necessary.</p>
 <p>Let’s take a look at the final data set:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">avia_monthly</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="../reference/pick.html">pick</a></span><span class="op">(</span><span class="st">"result"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 7,632 × 3</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 7,632 x 3</span></span>
 <span class="co">#&gt;    destination     date       passengers</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> LU_ELLX_AT_LOWW 2018-03-01 3967      </span>
@@ -154,7 +154,7 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> LU_ELLX_AT_LOWW 2017-08-01 4399      </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> LU_ELLX_AT_LOWW 2017-07-01 4277      </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span> LU_ELLX_AT_LOWW 2017-06-01 4674      </span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 7,622 more rows</span></span></code></pre></div>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 7,622 more rows</span></span></code></pre></div>
   </main>
 </div>
 

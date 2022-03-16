@@ -15,7 +15,7 @@ You can install the development version of loud from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("b-rodrigues/loud@release_0.1")
+devtools::install_github("b-rodrigues/loud@release_0.1.1")
 ```
 
 ## Example
@@ -32,8 +32,8 @@ loud_sqrt(1:5)
 #> [1] 1.000000 1.414214 1.732051 2.000000 2.236068
 #> 
 #> $log
-#> [1] "Log start..."                                                               
-#> [2] "✔ sqrt(1:5) started at 2022-03-12 21:57:58 and ended at 2022-03-12 21:57:58"
+#> [1] "Log start..."                                                                      
+#> [2] "<U+2714> sqrt(1:5) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"
 ```
 
 You can also use the native R pipe:
@@ -51,10 +51,10 @@ loud_mean <- loudly(mean)
 #> [1] 11.55345
 #> 
 #> $log
-#> [1] "Log start..."                                                                     
-#> [2] "✔ sqrt(1:10) started at 2022-03-12 21:57:58 and ended at 2022-03-12 21:57:58"     
-#> [3] "✔ exp(.l$result) started at 2022-03-12 21:57:58 and ended at 2022-03-12 21:57:58" 
-#> [4] "✔ mean(.l$result) started at 2022-03-12 21:57:58 and ended at 2022-03-12 21:57:58"
+#> [1] "Log start..."                                                                            
+#> [2] "<U+2714> sqrt(1:10) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"     
+#> [3] "<U+2714> exp(.l$result) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27" 
+#> [4] "<U+2714> mean(.l$result) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"
 ```
 
 `bind_loudly()` is used to pass the output from one decorated function
@@ -85,11 +85,11 @@ starwars %>%
 #> mass    dbl 55 69.75 56.333333 1358 NaN 53.1 
 #> 
 #> $log
-#> [1] "Log start..."                                                                                                   
-#> [2] "✔ select(.,height,mass,species,sex) started at 2022-03-12 21:57:58 and ended at 2022-03-12 21:57:58"            
-#> [3] "✔ group_by(.l$result,species,sex) started at 2022-03-12 21:57:58 and ended at 2022-03-12 21:57:58"              
-#> [4] "✔ filter(.l$result,sex != \"male\") started at 2022-03-12 21:57:58 and ended at 2022-03-12 21:57:58"            
-#> [5] "✔ summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-12 21:57:58 and ended at 2022-03-12 21:57:58"
+#> [1] "Log start..."                                                                                                          
+#> [2] "<U+2714> select(.,height,mass,species,sex) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"            
+#> [3] "<U+2714> group_by(.l$result,species,sex) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"              
+#> [4] "<U+2714> filter(.l$result,sex != \"male\") started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"            
+#> [5] "<U+2714> summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"
 ```
 
 You could also use the `%>=%` pipe instead of `bind_loudly()`:
@@ -109,11 +109,31 @@ starwars %>%
 #> mass    dbl 55 69.75 56.333333 1358 NaN 53.1 
 #> 
 #> $log
-#> [1] "Created loud value..."                                                                                          
-#> [2] "✔ select(.l$result,height,mass,species,sex) started at 2022-03-12 21:57:58 and ended at 2022-03-12 21:57:58"    
-#> [3] "✔ group_by(.l$result,species,sex) started at 2022-03-12 21:57:58 and ended at 2022-03-12 21:57:58"              
-#> [4] "✔ filter(.l$result,sex != \"male\") started at 2022-03-12 21:57:58 and ended at 2022-03-12 21:57:58"            
-#> [5] "✔ summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-12 21:57:58 and ended at 2022-03-12 21:57:58"
+#> [1] "Created loud value..."                                                                                                 
+#> [2] "<U+2714> select(.l$result,height,mass,species,sex) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"    
+#> [3] "<U+2714> group_by(.l$result,species,sex) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"              
+#> [4] "<U+2714> filter(.l$result,sex != \"male\") started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"            
+#> [5] "<U+2714> summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"
+```
+
+Errors, warnings, and messages also get caught and composed in the log:
+
+``` r
+starwars %>%
+  loud_value() %>=%
+  loud_select(height, mass, species, sex) %>=% 
+  loud_group_by(species, sx) %>=% # type, "sx" instead of "sex"
+  loud_filter(sex != "male") %>=%
+  loud_summarise(mass = mean(mass, na.rm = TRUE))
+#> $result
+#> NULL
+#> 
+#> $log
+#> [1] "Created loud value..."                                                                                                                                                                                                                       
+#> [2] "<U+2714> select(.l$result,height,mass,species,sex) started at 2022-03-16 11:04:27 and ended at 2022-03-16 11:04:27"                                                                                                                          
+#> [3] "<U+2716> CAUTION - ERROR: group_by(.l$result,species,sx) started at 2022-03-16 11:04:27 and failed at 2022-03-16 11:04:27 with following message: Must group by variables found in `.data`.\nx Column `sx` is not found."                    
+#> [4] "<U+2716> CAUTION - ERROR: filter(.l$result,sex != \"male\") started at 2022-03-16 11:04:27 and failed at 2022-03-16 11:04:27 with following message: no applicable method for 'filter' applied to an object of class \"NULL\""               
+#> [5] "<U+2716> CAUTION - ERROR: summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-16 11:04:27 and failed at 2022-03-16 11:04:27 with following message: no applicable method for 'summarise' applied to an object of class \"NULL\""
 ```
 
 ## Caution

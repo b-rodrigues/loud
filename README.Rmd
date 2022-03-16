@@ -26,7 +26,7 @@ You can install the development version of loud from [GitHub](https://github.com
 
 ```{r, eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("b-rodrigues/loud@release_0.1")
+devtools::install_github("b-rodrigues/loud@release_0.1.1")
 ```
 
 ## Example
@@ -90,6 +90,21 @@ starwars %>%
   loud_summarise(mass = mean(mass, na.rm = TRUE))
 
 ```
+
+Errors, warnings, and messages also get caught and composed in the log:
+
+```{r}
+
+starwars %>%
+  loud_value() %>=%
+  loud_select(height, mass, species, sex) %>=% 
+  loud_group_by(species, sx) %>=% # type, "sx" instead of "sex"
+  loud_filter(sex != "male") %>=%
+  loud_summarise(mass = mean(mass, na.rm = TRUE))
+
+```
+
+
 
 ## Caution
 
