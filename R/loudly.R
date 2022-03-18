@@ -1,8 +1,33 @@
+as_loud <- function(a){
+
+  structure(a, class = "loud")
+
+}
+
+#' @export
+print.loud <- function(x, ...){
+
+  cat("Result\n")
+  cat("---------------\n")
+  print(x$result, ...)
+  cat("\n")
+  cat("\n")
+  cat("---------------\n")
+  cat("Steps to achieve the above result:\n")
+  print(x$log, ...)
+  cat("\n")
+  cat("\n")
+  cat("---------------\n")
+  cat("Running time:\n")
+  print(x$run_time, ...)
+
+}
+
 #' Capture all errors, warnings and messages
 #' @param .f A function to decorate
 #' @return A function which returns a list. The first element of the list, $result, is the result of
 #' the original function .f applied to its inputs. The second element, $log is NULL in case everything
-#' goes well. In case of error/warning/message, $result is NA and and $log holds the message.
+#' goes well. In case of error/warning/message, $result is NA and $log holds the message.
 #' purely() is used by loudly() to allow the latter to handle errors.
 #' @importFrom rlang try_fetch eval_tidy cnd_message
 #' @examples
@@ -55,7 +80,7 @@ loudly <- function(.f){
 
   fstring <- deparse1(substitute(.f))
 
-  function(..., .log = "Log start..."){
+  function(..., .log = "Log start...", .run_time = 0){
 
     args <- paste0(rlang::enexprs(...), collapse = ",")
     the_function_call <- paste0(fstring, "("  , args, ")")
@@ -96,10 +121,11 @@ loudly <- function(.f){
 
     list_result <- list(
       result = result,
-      log = the_log
+      log = the_log,
+      run_time = .run_time + end - start
     )
 
-    list_result
+    as_loud(list_result)
   }
 }
 
@@ -115,7 +141,7 @@ loudly <- function(.f){
 #' @export
 bind_loudly <- function(.l, .f, ...){
 
-  .f(.l$result, ..., .log = .l$log)
+  .f(.l$result, ..., .log = .l$log, .run_time = .l$run_time)
 
 }
 
@@ -130,7 +156,8 @@ bind_loudly <- function(.l, .f, ...){
 #' @export
 flat_loudly <- function(.l, .f, ...){
 
-  .f(.l$result, ...)
+  .f(.l$result, ...) |>
+    as_loud()
 
 }
 
@@ -143,7 +170,9 @@ flat_loudly <- function(.l, .f, ...){
 loud_value <- function(.x){
 
   list(result = .x,
-       log = "Created loud value...")
+       log = "Created loud value...",
+       run_time = 0) |>
+    as_loud()
 }
 
 #' Pipe a loud value to a decorated function
@@ -171,7 +200,7 @@ make_command <- function(parsed_function){
          parsed_function$func,
          "(",
          parsed_function$args,
-         ".log = .l$log)")
+         ".log = .l$log, .run_time = .l$run_time)")
 
 }
 
@@ -206,7 +235,7 @@ parse_function <- function(.f_string){
 #' @export
 pick <- function(.l, .e){
 
-  stopifnot('.e must be either "result" or "log"' = .e %in% c("result", "log"))
+  stopifnot('.e must be either "result", "log" or "run_time"' = .e %in% c("result", "log", "run_time"))
 
   .l[[.e]]
 

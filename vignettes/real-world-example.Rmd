@@ -67,6 +67,13 @@ avia_monthly <- avia_clean %>%
 
 ```
 
+`avia_monthly` is an object of class `loud`, but in essence, it is just a list, with its own
+print method:
+
+```{r}
+avia_monthly
+```
+
 Now that the data is clean, we can take a look at the log and see what was done:
 
 ```{r}
@@ -84,4 +91,11 @@ Let's take a look at the final data set:
 ```{r}
 avia_monthly %>%
   pick("result")
+```
+
+It is also possible to see how look the computation took:
+
+```{r}
+avia_monthly %>%
+  pick("run_time")
 ```
