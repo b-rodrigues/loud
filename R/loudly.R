@@ -80,7 +80,7 @@ loudly <- function(.f){
 
   fstring <- deparse1(substitute(.f))
 
-  function(..., .log = "Log start...", .run_time = 0){
+  function(..., .log_df = data.frame()){
 
     args <- paste0(rlang::enexprs(...), collapse = ",")
     the_function_call <- paste0(fstring, "("  , args, ")")
@@ -92,37 +92,44 @@ loudly <- function(.f){
 
     if(all(is.na(res_pure$result))){
 
-      result <- NULL
+      log_df <- data.frame(
 
-      the_log <- c(.log,
-                   paste0("✖ CAUTION - ERROR: ",
-                          the_function_call,
-                          " started at ",
-                          start,
-                          " and failed at ",
-                          end,
-                          " with following message: ",
-                          res_pure$log))
+        "outcome" = "✖ Caution - ERROR",
+        "function" = fstring,
+        "arguments" = args,
+        "result" = res_pure$result,
+        "message" = res_pure$log,
+        "start_time" = start,
+        "end_time" = end,
+        "run_time" = end - start
+
+      )
+
+      log_df <- rbind(.df,
+                      log_df)
+
     } else {
 
-      result <- res_pure$result
+      log_df <- data.frame(
 
-      the_log <- c(.log,
-                   paste0("✔ ",
-                          the_function_call,
-                          " started at ",
-                          start,
-                          " and ended at ",
-                          end))
+        "outcome" = "✔  Success",
+        "function" = fstring,
+        "arguments" = args,
+        "result" = res_pure$result,
+        "message" = res_pure$log,
+        "start_time" = start,
+        "end_time" = end,
+        "run_time" = end - start
+
+      )
 
     }
 
 
 
     list_result <- list(
-      result = result,
-      log = the_log,
-      run_time = .run_time + end - start
+      result = res_pure$result,
+      log_df = log_df
     )
 
     as_loud(list_result)
@@ -141,7 +148,7 @@ loudly <- function(.f){
 #' @export
 bind_loudly <- function(.l, .f, ...){
 
-  .f(.l$result, ..., .log = .l$log, .run_time = .l$run_time)
+  .f(.l$result, ..., .log_df = .l$log_df)
 
 }
 
@@ -169,9 +176,23 @@ flat_loudly <- function(.l, .f, ...){
 #' @export
 loud_value <- function(.x){
 
+log_df_created <-   data.frame(
+
+    "outcome" = "✔  Success",
+    "function" = fstring,
+    "arguments" = args,
+    "result" = .x,
+    "message" = "Created loud value"
+    "start_time" = start,
+    "end_time" = end,
+    "run_time" = end - start
+
+  )
+
+
+  
   list(result = .x,
-       log = "Created loud value...",
-       run_time = 0) |>
+       log_df = log_df_created) |>
     as_loud()
 }
 
