@@ -60,7 +60,7 @@ test_that("parse summarise, with two functions and several arguments", {
 })
 
 test_that("make simple command", {
-  expect_equal(".l$result |> loud_exp(.log = .l$log)",
+  expect_equal(".l$result |> loud_exp(.log_df = .l$log_df)",
                make_command(
                  parse_function(
                    deparse1(substitute(
@@ -72,7 +72,7 @@ test_that("make simple command", {
 })
 
 test_that("make command with any args", {
-  expect_equal(".l$result |> loud_exp(ha, hu, .log = .l$log)",
+  expect_equal(".l$result |> loud_exp(ha, hu, .log_df = .l$log_df)",
                make_command(
                  parse_function(
                    deparse1(substitute(
@@ -84,7 +84,7 @@ test_that("make command with any args", {
 })
 
 test_that("make dplyr command", {
-  expect_equal(".l$result |> loud_summarise(mtcars, average = mean(cyl), .log = .l$log)",
+  expect_equal(".l$result |> loud_summarise(mtcars, average = mean(cyl), .log_df = .l$log_df)",
                make_command(
                  parse_function(
                    deparse1(substitute(

@@ -14,7 +14,7 @@ test_that("test that pipe and bind_loud give same results", {
     bind_loudly(loud_exp) |>
     bind_loudly(loud_mean)
 
-  expect_equal(result_pipe, result_bind)
+  expect_equal(result_pipe$result, result_bind$result)
 })
 
 
@@ -29,7 +29,7 @@ test_that("errors get captured and logs composed", {
     loud_sqrt() %>=%
     loud_exp()
 
-  expect_length(result_pipe$log, 4)
+  expect_equal(nrow(result_pipe$log_df), 3)
 
 })
 
@@ -55,5 +55,5 @@ test_that("test that pipe and bind_loud give same results for dplyr functions", 
     bind_loudly(loud_group_by, carb) |>
     bind_loudly(loud_summarise, mean_cyl = mean(cyl))
 
-  expect_equal(result_pipe, result_bind)
+  expect_equal(result_pipe$result, result_bind$result)
 })

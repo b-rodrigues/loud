@@ -14,12 +14,12 @@ print.loud <- function(x, ...){
   cat("\n")
   cat("---------------\n")
   cat("Steps to achieve the above result:\n")
-  print(x$log, ...)
+  print(x$log_df, ...)
   cat("\n")
   cat("\n")
   cat("---------------\n")
   cat("Running time:\n")
-  print(x$run_time, ...)
+  print(sum(x$log_df$run_time))
 
 }
 
@@ -70,13 +70,16 @@ purely <- function(.f){
 
 #' Add a simple logging message to any function
 #' @param .f A function to decorate
+#' @param .g Optional. A function to apply to the result for monitoring purposes.
 #' @return A function which returns a list. The first element of the list, $result, is the result of
-#' the original function .f applied to its inputs, and the second element is a log message, $log.
+#' the original function .f applied to its inputs, and the second element is a data frame with
+#' colmuns: outcome, function, arguments, message, start_time, end_time, run_time and g.
 #' @importFrom rlang enexprs
+#' @importFrom tibble tibble
 #' @examples
 #' loudly(sqrt)(10)
 #' @export
-loudly <- function(.f){
+loudly <- function(.f, .g = (\(x) NA)){
 
   fstring <- deparse1(substitute(.f))
 
@@ -92,40 +95,38 @@ loudly <- function(.f){
 
     if(all(is.na(res_pure$result))){
 
-      log_df <- data.frame(
+      log_df <- tibble::tibble(
 
         "outcome" = "✖ Caution - ERROR",
         "function" = fstring,
         "arguments" = args,
-        "result" = res_pure$result,
-        "message" = res_pure$log,
+        "message" = paste0(res_pure$log, collapse = " "),
         "start_time" = start,
         "end_time" = end,
-        "run_time" = end - start
+        "run_time" = end - start,
+        "g" = list(.g(res_pure$result))
+        )
 
-      )
-
-      log_df <- rbind(.df,
-                      log_df)
 
     } else {
 
-      log_df <- data.frame(
+      log_df <- tibble::tibble(
 
         "outcome" = "✔  Success",
         "function" = fstring,
         "arguments" = args,
-        "result" = res_pure$result,
-        "message" = res_pure$log,
+        "message" = paste0(res_pure$log, collapse = " "),
         "start_time" = start,
         "end_time" = end,
-        "run_time" = end - start
+        "run_time" = end - start,
+        "g" = list(.g(res_pure$result))
 
       )
 
     }
 
-
+    log_df <- rbind(.log_df,
+                    log_df)
 
     list_result <- list(
       result = res_pure$result,
@@ -171,26 +172,25 @@ flat_loudly <- function(.l, .f, ...){
 #' Create a loud value
 #' @param .x Any object
 #' @return Returns a loud value with the object as the $result
+#' @importFrom tibble tibble
 #' @examples
 #' loud_value(3)
 #' @export
 loud_value <- function(.x){
 
-log_df_created <-   data.frame(
+log_df_created <- tibble::tibble(
 
     "outcome" = "✔  Success",
-    "function" = fstring,
-    "arguments" = args,
-    "result" = .x,
-    "message" = "Created loud value"
-    "start_time" = start,
-    "end_time" = end,
-    "run_time" = end - start
+    "function" = "as_loud()",
+    "arguments" = NA,
+    "message" = "Created loud value",
+    "start_time" = Sys.time(),
+    "end_time" = Sys.time(),
+    "run_time" = 0
 
   )
 
 
-  
   list(result = .x,
        log_df = log_df_created) |>
     as_loud()
@@ -221,7 +221,7 @@ make_command <- function(parsed_function){
          parsed_function$func,
          "(",
          parsed_function$args,
-         ".log = .l$log, .run_time = .l$run_time)")
+         ".log_df = .l$log_df)")
 
 }
 
@@ -256,7 +256,7 @@ parse_function <- function(.f_string){
 #' @export
 pick <- function(.l, .e){
 
-  stopifnot('.e must be either "result", "log" or "run_time"' = .e %in% c("result", "log", "run_time"))
+  stopifnot('.e must be either "result", "log_df"' = .e %in% c("result", "log_df"))
 
   .l[[.e]]
 

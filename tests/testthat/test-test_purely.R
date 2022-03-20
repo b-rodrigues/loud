@@ -12,7 +12,7 @@ test_that("purely decorated function provides NA if problem", {
 })
 
 test_that("purely decorated function log", {
-  expect_type((purely(log)(-10))$log, "character")
+  expect_type((purely(log)(-10))$log_df, "character")
 })
 
 test_that("compose purely decorated functions", {

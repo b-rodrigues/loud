@@ -39,6 +39,7 @@ library(loud)
 loud_sqrt <- loudly(sqrt)
 
 loud_sqrt(1:5)
+
 ```
 
 You can also use the native R pipe:

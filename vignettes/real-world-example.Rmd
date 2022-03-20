@@ -79,7 +79,7 @@ Now that the data is clean, we can take a look at the log and see what was done:
 ```{r}
 
 avia_monthly %>%
-  pick("log")
+  pick("log_df")
 
 ```
 
@@ -97,5 +97,7 @@ It is also possible to see how look the computation took:
 
 ```{r}
 avia_monthly %>%
-  pick("run_time")
+  pick("log_df") %>%
+  summarise(total_run_time = sum(run_time))
+
 ```
