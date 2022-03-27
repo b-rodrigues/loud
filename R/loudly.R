@@ -4,6 +4,32 @@ as_loud <- function(a){
 
 }
 
+
+make_log_df <- function(success,
+                        fstring,
+                        args,
+                        res_pure,
+                        start = Sys.time(),
+                        end = Sys.time(),
+                        .g = (\(x) NA)){
+
+  outcome <- ifelse(success == 1,
+                    "✔  Success",
+                    "✖ Caution - ERROR")
+
+  tibble::tibble(
+            "outcome" = outcome,
+            "function" = fstring,
+            "arguments" = args,
+            "message" = paste0(res_pure$log, collapse = " "),
+            "start_time" = start,
+            "end_time" = end,
+            "run_time" = end - start,
+            "g" = list(.g(res_pure$result))
+          )
+
+}
+
 #' @export
 print.loud <- function(x, ...){
 
@@ -36,7 +62,7 @@ print.loud <- function(x, ...){
 #' @export
 purely <- function(.f){
 
-  function(..., .log = "Log start..."){
+  function(..., .log_df = "Log start..."){
 
     res <- rlang::try_fetch(
                     rlang::eval_tidy(.f(...)),
@@ -47,7 +73,7 @@ purely <- function(.f){
 
     final_result <- list(
       result = NULL,
-      log = NULL
+      log_df = NULL
     )
 
     final_result$result <- if(any(c("error", "warning", "message") %in% class(res))){
@@ -56,7 +82,7 @@ purely <- function(.f){
                              res
                            }
 
-    final_result$log <- if(any(c("error", "warning", "message") %in% class(res))){
+    final_result$log_df <- if(any(c("error", "warning", "message") %in% class(res))){
                           rlang::cnd_message(res)
                            } else {
                              NA
@@ -95,32 +121,26 @@ loudly <- function(.f, .g = (\(x) NA)){
 
     if(all(is.na(res_pure$result))){
 
-      log_df <- tibble::tibble(
-
-        "outcome" = "✖ Caution - ERROR",
-        "function" = fstring,
-        "arguments" = args,
-        "message" = paste0(res_pure$log, collapse = " "),
-        "start_time" = start,
-        "end_time" = end,
-        "run_time" = end - start,
-        "g" = list(.g(res_pure$result))
-        )
-
+      log_df <- make_log_df(
+        success = 0,
+        fstring = fstring,
+        args = args,
+        res_pure = res_pure,
+        start = start,
+        end = end,
+        .g = .g
+      )
 
     } else {
 
-      log_df <- tibble::tibble(
-
-        "outcome" = "✔  Success",
-        "function" = fstring,
-        "arguments" = args,
-        "message" = paste0(res_pure$log, collapse = " "),
-        "start_time" = start,
-        "end_time" = end,
-        "run_time" = end - start,
-        "g" = list(.g(res_pure$result))
-
+      log_df <- make_log_df(
+        success = 1,
+        fstring = fstring,
+        args = args,
+        res_pure = res_pure,
+        start = start,
+        end = end,
+        .g = .g
       )
 
     }
@@ -178,21 +198,19 @@ flat_loudly <- function(.l, .f, ...){
 #' @export
 loud_value <- function(.x){
 
-log_df_created <- tibble::tibble(
+  res_pure <- list("log" = NA,
+                   "result" = NA)
 
-    "outcome" = "✔  Success",
-    "function" = "as_loud()",
-    "arguments" = NA,
-    "message" = "Created loud value",
-    "start_time" = Sys.time(),
-    "end_time" = Sys.time(),
-    "run_time" = 0
-
-  )
-
+  log_df <- make_log_df(
+    success = 1,
+    fstring = "as_loud()",
+    args = NA,
+    res_pure = res_pure,
+    start = Sys.time(),
+    end = Sys.time())
 
   list(result = .x,
-       log_df = log_df_created) |>
+       log_df = log_df) |>
     as_loud()
 }
 
