@@ -14,7 +14,7 @@ make_log_df <- function(success,
                         .g = (\(x) NA)){
 
   outcome <- ifelse(success == 1,
-                    "✔  Success",
+                    "✔ Success",
                     "✖ Caution - ERROR")
 
   tibble::tibble(
@@ -25,12 +25,12 @@ make_log_df <- function(success,
             "start_time" = start,
             "end_time" = end,
             "run_time" = end - start,
-            "g" = list(.g(res_pure$result))
+            "g" = list(.g(res_pure$value))
           )
 
 }
 
-make_readable_log <- function(x){
+read_log <- function(x){
 
   log_df <- x$log_df
 
@@ -42,34 +42,64 @@ make_readable_log <- function(x){
 
   }
 
-  
+  is_success <- function(log_df, i){
+
+    ifelse(grepl("Success", log_df$outcome[i]),
+           "successfully",
+           "unsuccessfully")
+
+  }
+
+
+  make_sentence <- function(log_df, i){
+
+    paste(make_func_call(log_df, i), "ran", is_success(log_df, i), "at", log_df$start_time[i])
+
+  }
+
+  total_runtime <- function(log_df){
+
+    total_time <- log_df$run_time
+
+    unit <- attr(total_time, "units")
+
+    paste(as.numeric(sum(log_df$run_time)), unit)
+
+  }
+
+
+  sentences <- vector(length = nrow(log_df))
+
+  for(i in 1:nrow(log_df)){
+
+  sentences[i] <-  make_sentence(log_df, i)
+
+  }
+
+  c("Complete log:", sentences, paste("Total running time:", total_runtime(log_df)))
 
 }
 
 #' @export
 print.loud <- function(x, ...){
 
-  cat("Result\n")
+  cat("Value\n")
   cat("---------------\n")
-  print(x$result, ...)
-  cat("\n")
-  cat("\n")
-  cat("---------------\n")
-  cat("Steps to achieve the above result:\n")
-  print(x$log_df, ...)
-  cat("\n")
+  print(x$value, ...)
   cat("\n")
   cat("---------------\n")
-  cat("Total running time:\n")
-  print(sum(x$log_df$run_time))
+  cat("This is an object of type `loud`.\n")
+  cat("Retrieve the value of this object with pick(x, \"value\").\n")
+  cat("To read the log of this object, call read_log().\n")
+  cat("\n")
 
 }
 
 #' Capture all errors, warnings and messages
 #' @param .f A function to decorate
-#' @return A function which returns a list. The first element of the list, $result, is the result of
+#' @return A function which returns a list. The first element of the list, $value, is the result of
 #' the original function .f applied to its inputs. The second element, $log is NULL in case everything
-#' goes well. In case of error/warning/message, $result is NA and $log holds the message.
+#' goes well. In case of error/warning/message, $value is NA and $log holds the message.
 #' purely() is used by loudly() to allow the latter to handle errors.
 #' @importFrom rlang try_fetch eval_tidy cnd_message
 #' @examples
@@ -88,11 +118,11 @@ purely <- function(.f){
                   )
 
     final_result <- list(
-      result = NULL,
+      value = NULL,
       log_df = NULL
     )
 
-    final_result$result <- if(any(c("error", "warning", "message") %in% class(res))){
+    final_result$value <- if(any(c("error", "warning", "message") %in% class(res))){
                              NA
                            } else {
                              res
@@ -112,8 +142,8 @@ purely <- function(.f){
 
 #' Add a simple logging message to any function
 #' @param .f A function to decorate
-#' @param .g Optional. A function to apply to the result for monitoring purposes.
-#' @return A function which returns a list. The first element of the list, $result, is the result of
+#' @param .g Optional. A function to apply to the intermediary results for monitoring purposes.
+#' @return A function which returns a list. The first element of the list, $value, is the result of
 #' the original function .f applied to its inputs, and the second element is a data frame with
 #' colmuns: outcome, function, arguments, message, start_time, end_time, run_time and g.
 #' @importFrom rlang enexprs
@@ -135,7 +165,7 @@ loudly <- function(.f, .g = (\(x) NA)){
     res_pure <- (pure_f(...))
     end <- Sys.time()
 
-    if(all(is.na(res_pure$result))){
+    if(all(is.na(res_pure$value))){
 
       log_df <- make_log_df(
         success = 0,
@@ -165,7 +195,7 @@ loudly <- function(.f, .g = (\(x) NA)){
                     log_df)
 
     list_result <- list(
-      result = res_pure$result,
+      value = res_pure$value,
       log_df = log_df
     )
 
@@ -177,7 +207,7 @@ loudly <- function(.f, .g = (\(x) NA)){
 #' @param .l A loud value (a list of two elements)
 #' @param .f A loud function to apply to the returning value of .l
 #' @param ... Further parameters to pass to .f
-#' @return A list with elements .f(.l$result) and concatenated logs.
+#' @return A list with elements .f(.l$value) and concatenated logs.
 #' @examples
 #' loud_sqrt <- loudly(sqrt)
 #' loud_exp <- loudly(exp)
@@ -185,7 +215,7 @@ loudly <- function(.f, .g = (\(x) NA)){
 #' @export
 bind_loudly <- function(.l, .f, ...){
 
-  .f(.l$result, ..., .log_df = .l$log_df)
+  .f(.l$value, ..., .log_df = .l$log_df)
 
 }
 
@@ -194,20 +224,20 @@ bind_loudly <- function(.l, .f, ...){
 #' @param .l A loud value (a list of two elements)
 #' @param .f A non-loud function
 #' @param ... Further parameters to pass to .f
-#' @return Returns the result of .f(.l$result)
+#' @return Returns the result of .f(.l$value)
 #' @examples
 #' loud_value(3) |> flat_loudly(sqrt)
 #' @export
 flat_loudly <- function(.l, .f, ...){
 
-  .f(.l$result, ...) |>
+  .f(.l$value, ...) |>
     as_loud()
 
 }
 
 #' Create a loud value
 #' @param .x Any object
-#' @return Returns a loud value with the object as the $result
+#' @return Returns a loud value with the object as the $value
 #' @importFrom tibble tibble
 #' @examples
 #' loud_value(3)
@@ -215,7 +245,7 @@ flat_loudly <- function(.l, .f, ...){
 loud_value <- function(.x){
 
   res_pure <- list("log" = NA,
-                   "result" = NA)
+                   "value" = NA)
 
   log_df <- make_log_df(
     success = 1,
@@ -225,7 +255,7 @@ loud_value <- function(.x){
     start = Sys.time(),
     end = Sys.time())
 
-  list(result = .x,
+  list(value = .x,
        log_df = log_df) |>
     as_loud()
 }
@@ -251,7 +281,7 @@ loud_value <- function(.x){
 
 make_command <- function(parsed_function){
 
-  paste0(".l$result |> ",
+  paste0(".l$value |> ",
          parsed_function$func,
          "(",
          parsed_function$args,
@@ -281,16 +311,16 @@ parse_function <- function(.f_string){
 
 #' Retrieve an element from a loud value
 #' @param .l A loud value
-#' @param .e Element of interest to retrieve, one of "result" or "log"
-#' @return The `result` or `log` element of the loud value .l
+#' @param .e Element of interest to retrieve, one of "value" or "log"
+#' @return The `value` or `log` element of the loud value .l
 #' @examples
 #' loud_sqrt <- loudly(sqrt)
 #' loud_exp <- loudly(exp)
-#' 3 |> loud_sqrt() %>=% loud_exp() |> pick("result")
+#' 3 |> loud_sqrt() %>=% loud_exp() |> pick("value")
 #' @export
 pick <- function(.l, .e){
 
-  stopifnot('.e must be either "result", "log_df"' = .e %in% c("result", "log_df"))
+  stopifnot('.e must be either "value", "log_df"' = .e %in% c("value", "log_df"))
 
   .l[[.e]]
 

@@ -14,7 +14,7 @@ test_that("test that pipe and bind_loud give same results", {
     bind_loudly(loud_exp) |>
     bind_loudly(loud_mean)
 
-  expect_equal(result_pipe$result, result_bind$result)
+  expect_equal(result_pipe$value, result_bind$value)
 })
 
 
@@ -55,5 +55,5 @@ test_that("test that pipe and bind_loud give same results for dplyr functions", 
     bind_loudly(loud_group_by, carb) |>
     bind_loudly(loud_summarise, mean_cyl = mean(cyl))
 
-  expect_equal(result_pipe$result, result_bind$result)
+  expect_equal(result_pipe$value, result_bind$value)
 })

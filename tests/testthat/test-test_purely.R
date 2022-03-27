@@ -1,14 +1,14 @@
 test_that("purely decorated function provides correct result", {
-  expect_equal((purely(log)(10))$result, log(10))
+  expect_equal((purely(log)(10))$value, log(10))
 })
 
 
 test_that("purely decorated function provides right result", {
-  expect_equal((purely(log)(seq(1, 10)))$result, log(seq(1, 10)))
+  expect_equal((purely(log)(seq(1, 10)))$value, log(seq(1, 10)))
 })
 
 test_that("purely decorated function provides NA if problem", {
-  expect_equal((purely(log)(-10))$result, NA)
+  expect_equal((purely(log)(-10))$value, NA)
 })
 
 test_that("purely decorated function log", {
@@ -26,7 +26,7 @@ test_that("compose purely decorated functions", {
     pure_exp() %>=%
     pure_mean()
 
-  expect_equal(result_pipe$result, mean(exp(sqrt(1:10))))
+  expect_equal(result_pipe$value, mean(exp(sqrt(1:10))))
 
 })
 
@@ -47,7 +47,7 @@ test_that("compose purely decorated dplyr functions on data.frame", {
     dplyr::filter(am == 1) |>
     dplyr::summarise(mean_cyl = mean(cyl))
 
-  expect_equal(result_pure$result, result_impure)
+  expect_equal(result_pure$value, result_impure)
 
 })
 
@@ -70,7 +70,7 @@ test_that("compose purely decorated dplyr functions on tibbles", {
     dplyr::filter(am == 1) |>
     dplyr::summarise(mean_cyl = mean(cyl))
 
-  expect_equal(result_pure$result, result_impure)
+  expect_equal(result_pure$value, result_impure)
 
 })
 
@@ -79,6 +79,6 @@ test_that("test group_by", {
 
   pure_group_by <- purely(dplyr::group_by)
 
-  expect_equal(dplyr::group_by(mtcars, carb), pure_group_by(mtcars, carb)$result)
+  expect_equal(dplyr::group_by(mtcars, carb), pure_group_by(mtcars, carb)$value)
 
 })
