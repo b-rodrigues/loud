@@ -30,6 +30,22 @@ make_log_df <- function(success,
 
 }
 
+make_readable_log <- function(x){
+
+  log_df <- x$log_df
+
+  make_func_call <- function(log_df, i){
+
+    paste0(paste0(log_df[i, c("function", "arguments")],
+                  collapse = "("),
+           ")")
+
+  }
+
+  
+
+}
+
 #' @export
 print.loud <- function(x, ...){
 
@@ -44,7 +60,7 @@ print.loud <- function(x, ...){
   cat("\n")
   cat("\n")
   cat("---------------\n")
-  cat("Running time:\n")
+  cat("Total running time:\n")
   print(sum(x$log_df$run_time))
 
 }
@@ -203,7 +219,7 @@ loud_value <- function(.x){
 
   log_df <- make_log_df(
     success = 1,
-    fstring = "as_loud()",
+    fstring = "as_loud",
     args = NA,
     res_pure = res_pure,
     start = Sys.time(),
