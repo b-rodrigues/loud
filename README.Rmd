@@ -29,20 +29,33 @@ You can install the development version of loud from [GitHub](https://github.com
 devtools::install_github("b-rodrigues/loud@release_0.1.1")
 ```
 
-## Example
+## Introduction
 
-This is a basic example which shows you how to solve a common problem:
+{loud} allows you to decorate functions make them provide enhanced output:
+
 
 ```{r example}
 library(loud)
 
 loud_sqrt <- loudly(sqrt)
 
-loud_sqrt(1:5)
+a <- loud_sqrt(1:5)
 
 ```
 
-You can also use the native R pipe:
+Object `a` is now an object of class `loud`. The value of the `sqrt()` function applied to its arguments
+can be obtained using `pick()`:
+
+```{r}
+pick(a, "value")
+```
+
+A log also gets generated and can be read using `read_log()`:
+
+```{r}
+read_log(a)
+```
+This is especially useful for objects that get created using multiple calls:
 
 ```{r}
 
@@ -50,12 +63,20 @@ loud_sqrt <- loudly(sqrt)
 loud_exp <- loudly(exp)
 loud_mean <- loudly(mean)
 
-1:10 |>
+b <- 1:10 |>
   loud_sqrt() |>
   bind_loudly(loud_exp) |>
   bind_loudly(loud_mean)
 
 ```
+
+```{r}
+read_log(b)
+
+pick(b, "value")
+```
+
+## Composing decorated functions
 
 `bind_loudly()` is used to pass the output from one decorated function to the next.
 
@@ -69,7 +90,7 @@ loud_select <- loudly(select)
 loud_summarise <- loudly(summarise)
 loud_filter <- loudly(filter)
 
-starwars %>%
+output <- starwars %>%
   loud_select(height, mass, species, sex) %>%
   bind_loudly(loud_group_by, species, sex) %>%
   bind_loudly(loud_filter, sex != "male") %>%
@@ -79,11 +100,20 @@ starwars %>%
 
 ```
 
-You could also use the `%>=%` pipe instead of `bind_loudly()`:
+```{r}
+read_log(output)
+```
+
+The value can then be accessed and worked on as usual using `pick()`:
 
 ```{r}
+pick(output, "value")
+```
 
-starwars %>%
+This package also ships with a dedicated pipe, `%>=%` which you can use instead of `bind_loudly()`:
+
+```{r}
+output_pipe <- starwars %>%
   loud_value() %>=%
   loud_select(height, mass, species, sex) %>=%
   loud_group_by(species, sex) %>=%
@@ -92,17 +122,39 @@ starwars %>%
 
 ```
 
+```{r}
+pick(output_pipe, "value")
+```
+
+Objects of class `loud` have their own print method:
+
+```{r}
+output_pipe
+```
+
+## Condition handling
+
 Errors, warnings, and messages also get caught and composed in the log:
 
 ```{r}
 
-starwars %>%
+errord_output <- starwars %>%
   loud_value() %>=%
   loud_select(height, mass, species, sex) %>=% 
   loud_group_by(species, sx) %>=% # type, "sx" instead of "sex"
   loud_filter(sex != "male") %>=%
   loud_summarise(mass = mean(mass, na.rm = TRUE))
 
+```
+
+```{r}
+errord_output
+```
+
+Reading the log tells you which function failed, and with which error message:
+
+```{r}
+read_log(errord_output)
 ```
 
 

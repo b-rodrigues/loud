@@ -10,7 +10,7 @@ loud_value(.x)
 \item{.x}{Any object}
 }
 \value{
-Returns a loud value with the object as the $result
+Returns a loud value with the object as the $value
 }
 \description{
 Create a loud value

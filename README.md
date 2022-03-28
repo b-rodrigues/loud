@@ -18,44 +18,63 @@ You can install the development version of loud from
 devtools::install_github("b-rodrigues/loud@release_0.1.1")
 ```
 
-## Example
+## Introduction
 
-This is a basic example which shows you how to solve a common problem:
+{loud} allows you to decorate functions make them provide enhanced
+output:
 
 ``` r
 library(loud)
 
 loud_sqrt <- loudly(sqrt)
 
-loud_sqrt(1:5)
-#> $result
-#> [1] 1.000000 1.414214 1.732051 2.000000 2.236068
-#> 
-#> $log
-#> [1] "Log start..."                                                               
-#> [2] "✔ sqrt(1:5) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"
+a <- loud_sqrt(1:5)
 ```
 
-You can also use the native R pipe:
+Object `a` is now an object of class `loud`. The value of the `sqrt()`
+function applied to its arguments can be obtained using `pick()`:
+
+``` r
+pick(a, "value")
+#> [1] 1.000000 1.414214 1.732051 2.000000 2.236068
+```
+
+A log also gets generated and can be read using `read_log()`:
+
+``` r
+read_log(a)
+#> [1] "Complete log:"                                      
+#> [2] "✔ sqrt(1:5) ran successfully at 2022-03-28 22:05:27"
+#> [3] "Total running time: 0.000116825103759766 secs"
+```
+
+This is especially useful for objects that get created using multiple
+calls:
 
 ``` r
 loud_sqrt <- loudly(sqrt)
 loud_exp <- loudly(exp)
 loud_mean <- loudly(mean)
 
-1:10 |>
+b <- 1:10 |>
   loud_sqrt() |>
   bind_loudly(loud_exp) |>
   bind_loudly(loud_mean)
-#> $result
-#> [1] 11.55345
-#> 
-#> $log
-#> [1] "Log start..."                                                                     
-#> [2] "✔ sqrt(1:10) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"     
-#> [3] "✔ exp(.l$result) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42" 
-#> [4] "✔ mean(.l$result) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"
 ```
+
+``` r
+read_log(b)
+#> [1] "Complete log:"                                           
+#> [2] "✔ sqrt(1:10) ran successfully at 2022-03-28 22:05:27"    
+#> [3] "✔ exp(.l$value) ran successfully at 2022-03-28 22:05:27" 
+#> [4] "✔ mean(.l$value) ran successfully at 2022-03-28 22:05:27"
+#> [5] "Total running time: 0.0154945850372314 secs"
+
+pick(b, "value")
+#> [1] 11.55345
+```
+
+## Composing decorated functions
 
 `bind_loudly()` is used to pass the output from one decorated function
 to the next.
@@ -64,84 +83,118 @@ to the next.
 
 ``` r
 library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
 
 loud_group_by <- loudly(group_by)
 loud_select <- loudly(select)
 loud_summarise <- loudly(summarise)
 loud_filter <- loudly(filter)
 
-starwars %>%
+output <- starwars %>%
   loud_select(height, mass, species, sex) %>%
   bind_loudly(loud_group_by, species, sex) %>%
   bind_loudly(loud_filter, sex != "male") %>%
   bind_loudly(loud_summarise,
               mass = mean(mass, na.rm = TRUE)
               )
-#> $result
+```
+
+``` r
+read_log(output)
+#> [1] "Complete log:"                                                                         
+#> [2] "✔ select(.,height,mass,species,sex) ran successfully at 2022-03-28 22:05:27"           
+#> [3] "✔ group_by(.l$value,species,sex) ran successfully at 2022-03-28 22:05:27"              
+#> [4] "✔ filter(.l$value,sex != \"male\") ran successfully at 2022-03-28 22:05:27"            
+#> [5] "✔ summarise(.l$value,mean(mass, na.rm = TRUE)) ran successfully at 2022-03-28 22:05:27"
+#> [6] "Total running time: 0.0635149478912354 secs"
+```
+
+The value can then be accessed and worked on as usual using `pick()`:
+
+``` r
+pick(output, "value")
 #> tibble [9, 3] 
 #> grouped by: species [9] 
 #> species chr Clawdite Droid Human Hutt Kaminoan Mirialan
 #> sex     chr female none female hermaphroditic female female
-#> mass    dbl 55 69.75 56.333333 1358 NaN 53.1 
-#> 
-#> $log
-#> [1] "Log start..."                                                                                                   
-#> [2] "✔ select(.,height,mass,species,sex) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"            
-#> [3] "✔ group_by(.l$result,species,sex) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"              
-#> [4] "✔ filter(.l$result,sex != \"male\") started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"            
-#> [5] "✔ summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"
+#> mass    dbl 55 69.75 56.333333 1358 NaN 53.1
 ```
 
-You could also use the `%>=%` pipe instead of `bind_loudly()`:
+This package also ships with a dedicated pipe, `%>=%` which you can use
+instead of `bind_loudly()`:
 
 ``` r
-starwars %>%
+output_pipe <- starwars %>%
   loud_value() %>=%
   loud_select(height, mass, species, sex) %>=%
   loud_group_by(species, sex) %>=%
   loud_filter(sex != "male") %>=%
   loud_summarise(mass = mean(mass, na.rm = TRUE))
-#> $result
+```
+
+``` r
+pick(output_pipe, "value")
+#> tibble [9, 3] 
+#> grouped by: species [9] 
+#> species chr Clawdite Droid Human Hutt Kaminoan Mirialan
+#> sex     chr female none female hermaphroditic female female
+#> mass    dbl 55 69.75 56.333333 1358 NaN 53.1
+```
+
+Objects of class `loud` have their own print method:
+
+``` r
+output_pipe
+#> Value
+#> ---------------
 #> tibble [9, 3] 
 #> grouped by: species [9] 
 #> species chr Clawdite Droid Human Hutt Kaminoan Mirialan
 #> sex     chr female none female hermaphroditic female female
 #> mass    dbl 55 69.75 56.333333 1358 NaN 53.1 
 #> 
-#> $log
-#> [1] "Created loud value..."                                                                                          
-#> [2] "✔ select(.l$result,height,mass,species,sex) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"    
-#> [3] "✔ group_by(.l$result,species,sex) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"              
-#> [4] "✔ filter(.l$result,sex != \"male\") started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"            
-#> [5] "✔ summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"
+#> ---------------
+#> This is an object of type `loud`.
+#> Retrieve the value of this object with pick(x, "value").
+#> To read the log of this object, call read_log().
 ```
+
+## Condition handling
 
 Errors, warnings, and messages also get caught and composed in the log:
 
 ``` r
-starwars %>%
+errord_output <- starwars %>%
   loud_value() %>=%
   loud_select(height, mass, species, sex) %>=% 
   loud_group_by(species, sx) %>=% # type, "sx" instead of "sex"
   loud_filter(sex != "male") %>=%
   loud_summarise(mass = mean(mass, na.rm = TRUE))
-#> $result
-#> NULL
+```
+
+``` r
+errord_output
+#> Value
+#> ---------------
+#> [1] NA
 #> 
-#> $log
-#> [1] "Created loud value..."                                                                                                                                                                                                                
-#> [2] "✔ select(.l$result,height,mass,species,sex) started at 2022-03-16 21:11:42 and ended at 2022-03-16 21:11:42"                                                                                                                          
-#> [3] "✖ CAUTION - ERROR: group_by(.l$result,species,sx) started at 2022-03-16 21:11:42 and failed at 2022-03-16 21:11:42 with following message: Must group by variables found in `.data`.\n✖ Column `sx` is not found."                    
-#> [4] "✖ CAUTION - ERROR: filter(.l$result,sex != \"male\") started at 2022-03-16 21:11:42 and failed at 2022-03-16 21:11:42 with following message: no applicable method for 'filter' applied to an object of class \"NULL\""               
-#> [5] "✖ CAUTION - ERROR: summarise(.l$result,mean(mass, na.rm = TRUE)) started at 2022-03-16 21:11:42 and failed at 2022-03-16 21:11:42 with following message: no applicable method for 'summarise' applied to an object of class \"NULL\""
+#> ---------------
+#> This is an object of type `loud`.
+#> Retrieve the value of this object with pick(x, "value").
+#> To read the log of this object, call read_log().
+```
+
+Reading the log tells you which function failed, and with which error
+message:
+
+``` r
+read_log(errord_output)
+#> [1] "Complete log:"                                                                                                                                                                                    
+#> [2] "✔ as_loud(NA) ran successfully at 2022-03-28 22:05:27"                                                                                                                                            
+#> [3] "✔ select(.l$value,height,mass,species,sex) ran successfully at 2022-03-28 22:05:27"                                                                                                               
+#> [4] "✖ group_by(.l$value,species,sx) ran unsuccessfully with following exception: Must group by variables found in `.data`.\n✖ Column `sx` is not found. at 2022-03-28 22:05:27"                       
+#> [5] "✖ filter(.l$value,sex != \"male\") ran unsuccessfully with following exception: no applicable method for 'filter' applied to an object of class \"logical\" at 2022-03-28 22:05:27"               
+#> [6] "✖ summarise(.l$value,mean(mass, na.rm = TRUE)) ran unsuccessfully with following exception: no applicable method for 'summarise' applied to an object of class \"logical\" at 2022-03-28 22:05:27"
+#> [7] "Total running time: 0.120630502700806 secs"
 ```
 
 ## Caution

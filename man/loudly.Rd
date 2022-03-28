@@ -4,14 +4,17 @@
 \alias{loudly}
 \title{Add a simple logging message to any function}
 \usage{
-loudly(.f)
+loudly(.f, .g = (function(x) NA))
 }
 \arguments{
 \item{.f}{A function to decorate}
+
+\item{.g}{Optional. A function to apply to the intermediary results for monitoring purposes.}
 }
 \value{
-A function which returns a list. The first element of the list, $result, is the result of
-the original function .f applied to its inputs, and the second element is a log message, $log.
+A function which returns a list. The first element of the list, $value, is the result of
+the original function .f applied to its inputs, and the second element is a data frame with
+colmuns: outcome, function, arguments, message, start_time, end_time, run_time and g.
 }
 \description{
 Add a simple logging message to any function

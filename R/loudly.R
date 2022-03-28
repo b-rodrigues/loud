@@ -46,14 +46,27 @@ read_log <- function(x){
 
     ifelse(grepl("Success", log_df$outcome[i]),
            "successfully",
-           "unsuccessfully")
+           paste0("unsuccessfully with following exception: ", log_df$message[i]))
+
+  }
+
+  success_symbol <- function(log_df, i){
+
+    ifelse(grepl("Success", log_df$outcome[i]),
+           "✔",
+           "✖")
 
   }
 
 
   make_sentence <- function(log_df, i){
 
-    paste(make_func_call(log_df, i), "ran", is_success(log_df, i), "at", log_df$start_time[i])
+    paste(success_symbol(log_df, i),
+          make_func_call(log_df, i),
+          "ran",
+          is_success(log_df, i),
+          "at",
+          log_df$start_time[i])
 
   }
 

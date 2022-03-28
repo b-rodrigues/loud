@@ -10,9 +10,9 @@ purely(.f)
 \item{.f}{A function to decorate}
 }
 \value{
-A function which returns a list. The first element of the list, $result, is the result of
+A function which returns a list. The first element of the list, $value, is the result of
 the original function .f applied to its inputs. The second element, $log is NULL in case everything
-goes well. In case of error/warning/message, $result is NA and and $log holds the message.
+goes well. In case of error/warning/message, $value is NA and $log holds the message.
 purely() is used by loudly() to allow the latter to handle errors.
 }
 \description{

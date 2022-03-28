@@ -14,7 +14,7 @@ bind_loudly(.l, .f, ...)
 \item{...}{Further parameters to pass to .f}
 }
 \value{
-A list with elements .f(.l$result) and concatenated logs.
+A list with elements .f(.l$value) and concatenated logs.
 }
 \description{
 Evaluate a decorated function

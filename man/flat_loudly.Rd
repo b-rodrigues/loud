@@ -14,7 +14,7 @@ flat_loudly(.l, .f, ...)
 \item{...}{Further parameters to pass to .f}
 }
 \value{
-Returns the result of .f(.l$result)
+Returns the result of .f(.l$value)
 }
 \description{
 Evaluate a non-loud function on a loud value

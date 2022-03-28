@@ -9,10 +9,10 @@ pick(.l, .e)
 \arguments{
 \item{.l}{A loud value}
 
-\item{.e}{Element of interest to retrieve, one of "result" or "log"}
+\item{.e}{Element of interest to retrieve, one of "value" or "log"}
 }
 \value{
-The \code{result} or \code{log} element of the loud value .l
+The \code{value} or \code{log} element of the loud value .l
 }
 \description{
 Retrieve an element from a loud value
@@ -20,5 +20,5 @@ Retrieve an element from a loud value
 \examples{
 loud_sqrt <- loudly(sqrt)
 loud_exp <- loudly(exp)
-3 |> loud_sqrt() \%>=\% loud_exp() |> pick("result")
+3 |> loud_sqrt() \%>=\% loud_exp() |> pick("value")
 }
