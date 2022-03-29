@@ -134,7 +134,7 @@ output_pipe
 
 ## Condition handling
 
-Errors, warnings, and messages also get caught and composed in the log:
+By default, errors and warnings get caught and composed in the log:
 
 ```{r}
 
@@ -157,7 +157,35 @@ Reading the log tells you which function failed, and with which error message:
 read_log(errord_output)
 ```
 
+It is also possible to only capture errors, or catpure errors, warnings and messages using
+the `strict` parameter of `loud()`
 
+```{r}
+# Only errors:
+
+loud_sqrt <- loudly(sqrt, strict = 1)
+
+loud_sqrt(-10) |>
+  read_log()
+
+# Errors and warnings:
+
+loud_sqrt <- loudly(sqrt, strict = 2)
+
+loud_sqrt(-10) |>
+  read_log()
+
+# Errors, warnings and messages
+
+my_f <- function(x){
+  message("this is a message")
+  10
+}
+
+loudly(my_f, strict = 3)(10) |>
+                         read_log()
+
+```
 
 ## Caution
 

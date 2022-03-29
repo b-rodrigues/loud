@@ -96,7 +96,17 @@ read_log <- function(x){
 #' @export
 print.loud <- function(x, ...){
 
-  cat("Value\n")
+  if(all(grepl("Success", x$log_df$outcome))){
+
+    succeed <- "successfully"
+
+  } else {
+
+    succeed <- "unsuccessfully"
+
+  }
+
+  cat(paste0("Value computed", succeed, "\n"))
   cat("---------------\n")
   print(x$value, ...)
   cat("\n")
@@ -108,8 +118,37 @@ print.loud <- function(x, ...){
 
 }
 
+only_errors <- function(.f, ...){
+
+  rlang::try_fetch(
+           rlang::eval_tidy(.f(...)),
+           error = function(err) err,
+           )
+
+}
+
+errors_and_warnings <- function(.f, ...){
+
+  rlang::try_fetch(
+           rlang::eval_tidy(.f(...)),
+           error = function(err) err,
+           warning = function(warn) warn,
+           )
+}
+
+errs_warn_mess <- function(.f, ...){
+
+  rlang::try_fetch(
+           rlang::eval_tidy(.f(...)),
+           error = function(err) err,
+           warning = function(warn) warn,
+           message = function(message) message,
+           )
+}
+
 #' Capture all errors, warnings and messages
 #' @param .f A function to decorate
+#' @param strict Controls if the decorated function should catch only errors (1), errors and warnings (2, the default) or errors, warnings and messages (3)
 #' @return A function which returns a list. The first element of the list, $value, is the result of
 #' the original function .f applied to its inputs. The second element, $log is NULL in case everything
 #' goes well. In case of error/warning/message, $value is NA and $log holds the message.
@@ -118,17 +157,16 @@ print.loud <- function(x, ...){
 #' @examples
 #' purely(log)(10)
 #' purely(log)(-10)
+#' purely(log, strict = 1)(-10) # This produces a warning, so with strict = 1 nothing gets captured.
 #' @export
-purely <- function(.f){
+purely <- function(.f, strict = 2){
 
   function(..., .log_df = "Log start..."){
 
-    res <- rlang::try_fetch(
-                    rlang::eval_tidy(.f(...)),
-                    error = function(err) err,
-                    warning = function(warn) warn,
-                    message = function(message) message,
-                  )
+    res <- switch(strict,
+                  only_errors(.f, ...),
+                  errors_and_warnings(.f, ...),
+                  errs_warn_mess(.f, ...))
 
     final_result <- list(
       value = NULL,
@@ -156,6 +194,7 @@ purely <- function(.f){
 #' Add a simple logging message to any function
 #' @param .f A function to decorate
 #' @param .g Optional. A function to apply to the intermediary results for monitoring purposes.
+#' @param strict Controls if the decorated function should catch only errors (1), errors and warnings (2, the default) or errors, warnings and messages (3)
 #' @return A function which returns a list. The first element of the list, $value, is the result of
 #' the original function .f applied to its inputs, and the second element is a data frame with
 #' colmuns: outcome, function, arguments, message, start_time, end_time, run_time and g.
@@ -164,7 +203,7 @@ purely <- function(.f){
 #' @examples
 #' loudly(sqrt)(10)
 #' @export
-loudly <- function(.f, .g = (\(x) NA)){
+loudly <- function(.f, .g = (\(x) NA), strict = 2){
 
   fstring <- deparse1(substitute(.f))
 
@@ -174,7 +213,7 @@ loudly <- function(.f, .g = (\(x) NA)){
     the_function_call <- paste0(fstring, "("  , args, ")")
 
     start <- Sys.time()
-    pure_f <- purely(.f)
+    pure_f <- purely(.f, strict = strict)
     res_pure <- (pure_f(...))
     end <- Sys.time()
 
