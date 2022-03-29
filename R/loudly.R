@@ -98,15 +98,15 @@ print.loud <- function(x, ...){
 
   if(all(grepl("Success", x$log_df$outcome))){
 
-    succeed <- "successfully"
+    succeed <- "successfully ✔"
 
   } else {
 
-    succeed <- "unsuccessfully"
+    succeed <- "unsuccessfully ✖"
 
   }
 
-  cat(paste0("Value computed", succeed, "\n"))
+  cat(paste0("Value computed ", succeed, ":\n"))
   cat("---------------\n")
   print(x$value, ...)
   cat("\n")
