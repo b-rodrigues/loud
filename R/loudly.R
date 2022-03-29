@@ -283,7 +283,7 @@ bind_loudly <- function(.l, .f, ...){
 flat_loudly <- function(.l, .f, ...){
 
   .f(.l$value, ...) |>
-    as_loud()
+    loud_value(.log_df = .l$log_df)
 
 }
 
@@ -294,7 +294,7 @@ flat_loudly <- function(.l, .f, ...){
 #' @examples
 #' loud_value(3)
 #' @export
-loud_value <- function(.x){
+loud_value <- function(.x, .log_df){
 
   res_pure <- list("log" = NA,
                    "value" = NA)
@@ -308,7 +308,8 @@ loud_value <- function(.x){
     end = Sys.time())
 
   list(value = .x,
-       log_df = log_df) |>
+       log_df = dplyr::bind_rows(.log_df,
+                                 log_df)) |>
     as_loud()
 }
 

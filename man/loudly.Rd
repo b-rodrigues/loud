@@ -4,12 +4,14 @@
 \alias{loudly}
 \title{Add a simple logging message to any function}
 \usage{
-loudly(.f, .g = (function(x) NA))
+loudly(.f, .g = (function(x) NA), strict = 2)
 }
 \arguments{
 \item{.f}{A function to decorate}
 
 \item{.g}{Optional. A function to apply to the intermediary results for monitoring purposes.}
+
+\item{strict}{Controls if the decorated function should catch only errors (1), errors and warnings (2, the default) or errors, warnings and messages (3)}
 }
 \value{
 A function which returns a list. The first element of the list, $value, is the result of

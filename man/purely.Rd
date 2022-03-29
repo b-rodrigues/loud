@@ -4,10 +4,12 @@
 \alias{purely}
 \title{Capture all errors, warnings and messages}
 \usage{
-purely(.f)
+purely(.f, strict = 2)
 }
 \arguments{
 \item{.f}{A function to decorate}
+
+\item{strict}{Controls if the decorated function should catch only errors (1), errors and warnings (2, the default) or errors, warnings and messages (3)}
 }
 \value{
 A function which returns a list. The first element of the list, $value, is the result of
@@ -21,4 +23,5 @@ Capture all errors, warnings and messages
 \examples{
 purely(log)(10)
 purely(log)(-10)
+purely(log, strict = 1)(-10) # This produces a warning, so with strict = 1 nothing gets captured.
 }

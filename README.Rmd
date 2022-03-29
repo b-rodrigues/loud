@@ -191,7 +191,7 @@ loudly(my_f, strict = 3)(10) |>
 
 This packages is in early development and basically is held together with string and j*zz. Use at
 your own peril, but it has some tests now that pass, so it shouldn't be too bad. That being said,
-if you used it for serious work and it turns out that you house caught on fire, that's on you.
+if you used it for serious work and it turns out that your house caught on fire, that's on you.
 
 ## Thanks
 

@@ -29,7 +29,7 @@ First draft: are we dealing with a monad?
 a <- loud_value(10)
 
 test_that("first monadic law", {
-  expect_equal(flat_loudly(a, sqrt), sqrt(a$result))
+  expect_equal(flat_loudly(a, sqrt), sqrt(a$value))
 })
 
 
