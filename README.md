@@ -1,6 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# Do not use this package! Its functionalities have been ported to a new package, {chronicler}, https://github.com/b-rodrigues/chronicler
+
+
 # loud
 
 <!-- badges: start -->
